@@ -1,0 +1,2 @@
+str_list = ['I', 'love', 'UW']
+' '.join(str_list)
