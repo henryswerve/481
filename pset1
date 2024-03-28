@@ -1,4 +1,8 @@
-str_list = ['I', 'love', 'UW']
-' '.join(str_list)
+#problem 1
 
-str_list
+def github() -> str:
+    """
+    comment
+    """
+    return "https://github.com/henryswerve/481.git"
+
