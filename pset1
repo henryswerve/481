@@ -25,13 +25,31 @@ import seaborn
 #exercise 2
 
 
+dict_1 = {
+    'evens': [],
+    'odds': [],
+}
+
+n = 4
+
 def evens_and_odds(n: int) -> dict:
     """
     Some docstrings.
     """
 
+    for i in range(n):
+        #want something where if i divide by 2, i get a full number
+        #if the number is whole, it will be an int not a float, and will be added to odds
+        if i % 2 == 0:
+            dict_1['evens'].append(i)
 
-    return evens_and_odds
+        #else, it is odd and add to odd from dict_1
+        else:
+            dict_1['odds'].append(i)
+    return dict_1
+
+results = evens_and_odds(n)
+print(results)
 
 #exercise 3
 
