@@ -20,25 +20,37 @@ import seaborn
 # natural numbers less than n, and “odds” the sum of all natural numbers less than n.
 
 # For example, evens_and_odds(4) should return
-
 # {'evens': 2, 'odds': 4}
+
 #exercise 2
 
-dict1 = {
-    'string_e': 'evens',
-    'string_o': 'odds',
-    #'int': 4,
+
+dict_1 = {
+    'evens': [],
+    'odds': [],
 }
 
-print(dict1)
+n = 4
 
 def evens_and_odds(n: int) -> dict:
     """
-    Some docstrings.
+    takes in natural number n and adds to either 'evens' or 
+    'odds' in dict_1 depending on divisibility
     """
-    # dict1
 
-    return evens_and_odds
+    for i in range(n):
+        #want something where if i divide by 2, i get a full number
+        #if the number is whole, it will be an int not a float, and will be added to odds
+        if i % 2 == 0:
+            dict_1['evens'].append(i)
+
+        #else, it is odd and we add to odd from dict_1
+        else:
+            dict_1['odds'].append(i)
+    return dict_1
+
+results = evens_and_odds(n)
+print(results)
 
 #exercise 3
 
@@ -59,11 +71,33 @@ def evens_and_odds(n: int) -> dict:
 
 from typing import Union
 
+import datetime
+
+#yr month day
+
+date_1 = datetime.date(2024, 3, 31)
+
+date_2 = datetime.date(2024, 4, 1)
+
+#formats both a string
+date_1.strftime("%Y-%m-%d")
+
+date_2.strftime("%Y-%m-%d")
+
+delta = date_2 - date_1
+
+print(delta)
+# print(dt2)
+
 def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
     """
     Some docstrings.
     """
+    # if keyword is string, return there are XX days between the two dates.
 
+    # if 
+
+    # else 
     return None
 
 #exercise 4
@@ -75,12 +109,24 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
 
 # ['c', 'b', 'a']
 
+in_list = ['a', 'b', 'c']
+#  0, 1, 2
+# n, n + 1, n + 2
+
+new_list = []
+
+# we want to reverse, so we can 
 def reverse(in_list: list) -> list:
     """
-    Some docstrings.
+    want to reverse order of list.
     """
+    new_list = in_list[::-1]
     
-    return None
+    return new_list
+
+results_4 = new_list
+
+print(results_4)
 
 #exercise 5
 
