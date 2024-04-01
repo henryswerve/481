@@ -14,65 +14,36 @@ import scipy
 import matplotlib
 import seaborn
 
-# Please write a function called evens_and_odds that takes as argument 
-# a natural number n and returns a dictionary with two keys, 
-# “evens” and “odds”. “evens” should be the sum of all the even 
-# natural numbers less than n, and “odds” the sum of all natural numbers less than n.
+#exercise 2 DONE
 
-# For example, evens_and_odds(4) should return
-# {'evens': 2, 'odds': 4}
-
-#exercise 2
-
-dict_1 = {
-    'evens': [],
-    'odds': [],
-}
 
 n = 4
-
-evensum = 0
-oddsum = 0
-
+    
 def evens_and_odds(n: int) -> dict:
     """
     """
+    evensum = 0
+    oddsum = 0
+    dict_1 = {
+    'evens': [],
+    'odds': [],
+    }
     
     for i in range(n):
         if i % 2 == 0:
-            dict_1['evens'] += i
-
+            evensum += i
         else:
-            dict_1['odds'] += i
+            oddsum += i
+    dict_1['evens'].append(evensum)
+    dict_1['odds'].append(oddsum)
     return dict_1
 
 print(evens_and_odds(n))
 
-# def evens_and_odds(n: int) -> dict:
-#     """
-#     takes in natural number n and adds to either 'evens' or 
-#     'odds' in dict_1 depending on divisibility
-#     """
-
-#     for i in range(n):
-#         #want something where if i divide by 2, i get a full number
-#         #if the number is whole, it will be an int not a float, and will be added to odds
-#         if i % 2 == 0:
-#             dict_1['evens'].append(i)
-
-#         #else, it is odd and we add to odd from dict_1
-#         else:
-#             dict_1['odds'].append(i)
-#     return dict_1
-
-# results = evens_and_odds(n)
-# print(results)
-
-
-
 #exercise 3
 
-# Please write a function called time_diff that takes as arguments two strings in the format ‘YYYY-MM-DD’ 
+# Please write a function called time_diff that takes as arguments 
+# two strings in the format ‘YYYY-MM-DD’ 
 # and a keyword out dictating the output. If the keyword is “float”, 
 # return the time between the two dates (in absolute value) in days. 
 # If the keyword is “string”, return “There are XX days between the two dates”. 
@@ -127,23 +98,13 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
 
 #exercise 4 DONE
 
-# Please write a function called reverse that takes as its argument a list and returns a 
-# list of the arguments in reverse order (do not use any built-in sorting methods).
-
-# For example, reverse(['a', 'b', 'c']) should return
-
-# ['c', 'b', 'a']
-
 in_list = ['a', 'b', 'c']
-newlist = []
 
-# we want to reverse, so we can 
 def reverse(in_list: list) -> list:
     """
     want to reverse order of list.
     """
-    # new_list = in_list[::-1]
-
+    newlist = []
     newlist = list(reversed(in_list))
     
     return newlist
@@ -156,11 +117,18 @@ print(results_4)
 
 # Write a function called prob_k_heads that takes as its arguments natural numbers n 
 # and k with n>k and returns the probability of getting k heads from n flips 3.
+
 #this is a binomial distribution
+
+# (n!/(n-x)!x!) * p^x * q^n-x
 
 # For example, prob_k_heads(1,1) should return
 
 # .5
+
+n = 3
+k = 1
+
 
 def prob_k_heads(n: int, k: int) -> float:
     """
