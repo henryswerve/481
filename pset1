@@ -14,30 +14,39 @@ import scipy
 import matplotlib
 import seaborn
 
-# print("hi")
-
-# Please write a function called evens_and_odds that takes as argument a natural number n and returns a dictionary with two keys, 
-# “evens” and “odds”. “evens” should be the sum of all the even natural numbers less than n, and “odds” the sum of all natural numbers less than n.
+# Please write a function called evens_and_odds that takes as argument 
+# a natural number n and returns a dictionary with two keys, 
+# “evens” and “odds”. “evens” should be the sum of all the even 
+# natural numbers less than n, and “odds” the sum of all natural numbers less than n.
 
 # For example, evens_and_odds(4) should return
 
 # {'evens': 2, 'odds': 4}
 #exercise 2
 
+dict1 = {
+    'string_e': 'evens',
+    'string_o': 'odds',
+    #'int': 4,
+}
+
+print(dict1)
 
 def evens_and_odds(n: int) -> dict:
     """
     Some docstrings.
     """
-
+    # dict1
 
     return evens_and_odds
 
 #exercise 3
 
 # Please write a function called time_diff that takes as arguments two strings in the format ‘YYYY-MM-DD’ 
-# and a keyword out dictating the output. If the keyword is “float”, return the time between the two dates (in absolute value) in days. 
-# If the keyword is “string”, return “There are XX days between the two dates”. If not specified, the out keyword should be assumed to be “float”. 
+# and a keyword out dictating the output. If the keyword is “float”, 
+# return the time between the two dates (in absolute value) in days. 
+# If the keyword is “string”, return “There are XX days between the two dates”. 
+# If not specified, the out keyword should be assumed to be “float”. 
 # You should use the datetime package, and no others.
 
 # For example, time_diff('2020-01-01', '2020-01-02', 'float') should return
