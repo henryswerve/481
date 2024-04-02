@@ -40,7 +40,7 @@ def evens_and_odds(n: int) -> dict:
 
 print(evens_and_odds(n))
 
-#exercise 3
+#exercise 3 eh
 
 # Please write a function called time_diff that takes as arguments 
 # two strings in the format ‘YYYY-MM-DD’ 
@@ -58,7 +58,6 @@ print(evens_and_odds(n))
 # "There are 2 days between the two dates"
 
 from typing import Union
-
 import datetime
 
 #yr month day
@@ -67,34 +66,41 @@ date_1 = datetime.date(2020, 1, 1)
 
 date_2 = datetime.date(2020, 1, 2)
 
-date_3 = datetime.date(2020, 1, 3)
-
-print(date_1)
-#formats both as a string
+#formats date_1 and date_2 to correct format
 date_1.strftime("%Y-%m-%d")
 
 date_2.strftime("%Y-%m-%d")
 
-date_3.strftime("%Y-%m-%d")
+out = "string"
 
-# fix this... how t oget around it
-# date_fn1 = str(date_1 + "float")
+# date_1 + out 
+# how to fix?
 
-# print(date_fn1)
-# delta = date_2 - date_1
+# def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
+#     """
+#     Some docstrings.
+#     """
+#     date_3 = datetime.date(2020, 1, 3)
+#     date_3.strftime("%Y-%m-%d")
+#     delta = date_1 - date_2
+#     delta_3 = date_3 - date_1
 
-# print(delta)
-# print(dt2)
+#     if delta or delta_3 < 0:
+#         delta = delta * -1
+#         delta_3 = delta_3 * -1
+#     else:
+#         delta
+#         delta_3
+    
+#     #
+#     if out == "float":
+#         output_string_1 = "There are {delta_3} days between the two dates"
+#     else:
+#         output_string_2 = delta
 
-def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
-    """
-    Some docstrings.
-    """
-    # if keyword is string, return there are XX days 
-    # between the two dates.
+#     return output_string_1, output_string_2
 
-    # else 
-    return None
+# print(time_diff(date_1))
 
 #exercise 4 DONE
 
@@ -120,19 +126,30 @@ print(results_4)
 
 #this is a binomial distribution
 
-# (n!/(n-x)!x!) * p^x * q^n-x
+# (n!/k!(n-k)!) * p^x * q^n-x
 
 # For example, prob_k_heads(1,1) should return
 
 # .5
 
-n = 3
-k = 1
-
+n = 3.
+k = 1.
 
 def prob_k_heads(n: int, k: int) -> float:
     """
     Some docstrings.
     """
+    prob = 0.
+    # for n!
+    factorial_n = 1
+    for i in range(1, n+1):
+        factorial_n *= i
 
-    return None
+    # for k! should I just use the binomial coefficient code from the slides
+    factorial_k = 1
+    for i in range(1, k+1):
+        factorial_k *= i
+    
+    return prob
+
+prob_k_heads(1, 1)
