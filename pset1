@@ -17,11 +17,13 @@ import seaborn
 #exercise 2 DONE
 
 
-n = 4
-    
+# n = 0
+
+# have n = 4 outside of function? or keep inside?
 def evens_and_odds(n: int) -> dict:
     """
     """
+    n = 4
     evensum = 0
     oddsum = 0
     dict_1 = {
@@ -38,9 +40,11 @@ def evens_and_odds(n: int) -> dict:
     dict_1['odds'].append(oddsum)
     return dict_1
 
-print(evens_and_odds(n))
+print(evens_and_odds(4))
 
 #exercise 3 eh out? meaning? explain?
+
+# need to work on this... delta output is not what we want
 
 # Please write a function called time_diff that takes as arguments 
 # two strings in the format ‘YYYY-MM-DD’ 
@@ -71,7 +75,8 @@ date_1.strftime("%Y-%m-%d")
 
 date_2.strftime("%Y-%m-%d")
 
-out = "string"
+out = ""
+output_string = ""
 # date_1 + out 
 # how to fix?
 
@@ -79,30 +84,56 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
     """
     Some docstrings.
     """
+    out = ""
+    date_1 = datetime.date(2020, 1, 1)
+    date_2 = datetime.date(2020, 1, 2)
+    date_3 = datetime.date(2020, 1, 3)
+    date_1.strftime("%Y-%m-%d")
+    date_2.strftime("%Y-%m-%d")
+    date_3.strftime("%Y-%m-%d")
     delta = date_1 - date_2
     delta_3 = date_3 - date_1
-    date_3 = datetime.date(2020, 1, 3)
-    date_3.strftime("%Y-%m-%d")
 
-    if delta < 0:
-        delta = abs(delta)
-    elif delta_3 < 0:
-        delta_3 = abs(delta_3)
-    else:
-        None
+    if out == "float":
+        delta, delta_3
+    # elif out == "string":
+    #     output_string = "There are {delta_3} days between the dates"
+        
+    # if delta < 0:
+    #     delta = abs(delta)
+    # elif delta_3 < 0:
+    #     delta_3 = abs(delta_3)
+    # else:
+    #     None
     
-    if delta_3 > 1:
-        output_string = "There are {delta_3} days between the dates"
-    elif delta_3 == 1:
-        delta_3
-    elif delta > 1:
-        output_string_2 = "There are {delta} days between the dates"
-    elif delta == 1:
-        delta
-    else:
-        None
+    # if delta_3 > 1 & out == "string":
+    #     output_string = "There are {delta_3} days between the dates"
+    # elif delta_3 == 1:
+    #     delta_3
+    # elif delta > 1 & out == "string":
+    #     output_string_2 = "There are {delta} days between the dates"
+    # elif delta == 1:
+    #     delta
+    # else:
+    #     None
 
-    return None
+    return delta, delta_3, output_string
+
+print(time_diff(date_1, date_2, "float"))
+
+from typing import Union
+
+# def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
+#     """
+#     Some docstrings.
+#     """
+
+#     return None
+
+    # should return a string (date) OR a float (delta/delta_3)
+    # return output_string, output_string_2, delta, delta_3
+
+# print(time_diff(date_1, date_2, "string"))
 # want to return something that checks second ifelse block, 
 # includes output_strings with dates associated with them
 
@@ -148,7 +179,7 @@ results_4 = reverse(in_list)
 
 print(results_4)
 
-#exercise 5 almost, got coef. done, prob?
+#exercise 5 ?
 
 # Write a function called prob_k_heads that takes as its arguments natural numbers n 
 # and k with n>k and returns the probability of getting k heads from n flips 3.
@@ -164,8 +195,6 @@ print(results_4)
 # p^x * q^n-x
 n = 0
 k = 0
-binom_value = 0
-prob = 0
 
 def prob_k_heads(n: int, k: int) -> float:
     """
@@ -174,7 +203,7 @@ def prob_k_heads(n: int, k: int) -> float:
     # binom coef (n choose k part is done, 
     # n_minus_k_fac is the value returned)
     n_minus_k_fac = 1
-    for i in range(1, n-k+2):
+    for i in range(1, n-k+1):
         n_minus_k_fac *= i
     n_choose_k = 1
     for i in range(k+1, n+1):
@@ -182,12 +211,21 @@ def prob_k_heads(n: int, k: int) -> float:
     n_choose_k /= n_minus_k_fac
 
     # p^x * q^n-x
-    prob_success = 0
-    prob_failure = 0
+    p_val = 0
+    q_val = 0
+    
+    # we know the prob for success/failure is 0.5 for flipping coins
+    for i in range(n):
+        p_val = 0.5**i
+        q_val = 0.5**(n - i)
 
-    # for i in range(n, ):
-    #     aaaaaa = 0
+    binom_prob = n_minus_k_fac * p_val * q_val
 
-    return n_minus_k_fac 
+    return binom_prob
 
-# for now, should eventually return variable prob
+print(prob_k_heads(1, 1))
+
+# returns 0.5, not .5?
+
+# for 3 flips, i expect 1 head, which should be 0.33? but returns 0.75?
+# or is this wrong logic?
