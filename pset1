@@ -66,101 +66,27 @@ import datetime
 
 #yr month day
 
-date_1 = datetime.date(2020, 1, 1)
-
-date_2 = datetime.date(2020, 1, 2)
-
-#formats date_1 and date_2 to correct format
-date_1.strftime("%Y-%m-%d")
-
-date_2.strftime("%Y-%m-%d")
-
-out = ""
-output_string = ""
-# date_1 + out 
-# how to fix?
-
 def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
     """
     Some docstrings.
     """
-    out = ""
-    date_1 = datetime.date(2020, 1, 1)
-    date_2 = datetime.date(2020, 1, 2)
-    date_3 = datetime.date(2020, 1, 3)
-    date_1.strftime("%Y-%m-%d")
-    date_2.strftime("%Y-%m-%d")
-    date_3.strftime("%Y-%m-%d")
-    delta = date_1 - date_2
-    delta_3 = date_3 - date_1
+    # want to go from string to datetime
 
-    if out == "float":
-        delta, delta_3
-    # elif out == "string":
-    #     output_string = "There are {delta_3} days between the dates"
+    # change datetime to int for elif
+
+    date_1 = datetime.datetime.strptime(date_1, '%Y-%m-%d')
+    date_2 = datetime.datetime.strptime(date_2, '%Y-%m-%d')
+    
+    delta = abs(date_2 - date_1)
+
         
-    # if delta < 0:
-    #     delta = abs(delta)
-    # elif delta_3 < 0:
-    #     delta_3 = abs(delta_3)
-    # else:
-    #     None
-    
-    # if delta_3 > 1 & out == "string":
-    #     output_string = "There are {delta_3} days between the dates"
-    # elif delta_3 == 1:
-    #     delta_3
-    # elif delta > 1 & out == "string":
-    #     output_string_2 = "There are {delta} days between the dates"
-    # elif delta == 1:
-    #     delta
-    # else:
-    #     None
+    if out == "string":
+        return f"There are {str(delta.days)} days between the two dates"
+    elif out == "float":
+        delta_1 = abs(date_2 - date_1)
+        return delta_1.days
 
-    return delta, delta_3, output_string
-
-print(time_diff(date_1, date_2, "float"))
-
-from typing import Union
-
-# def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
-#     """
-#     Some docstrings.
-#     """
-
-#     return None
-
-    # should return a string (date) OR a float (delta/delta_3)
-    # return output_string, output_string_2, delta, delta_3
-
-# print(time_diff(date_1, date_2, "string"))
-# want to return something that checks second ifelse block, 
-# includes output_strings with dates associated with them
-
-# def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
-#     """
-#     """
-#     date_3 = datetime.date(2020, 1, 3)
-#     date_3.strftime("%Y-%m-%d")
-#     delta = date_1 - date_2
-#     delta_3 = date_3 - date_1
-
-#     if delta or delta_3 < 0:
-#         delta = delta * -1
-#         delta_3 = delta_3 * -1
-#     else:
-#         delta
-#         delta_3
-    
-#     #
-#     if out == "float":
-#         output_string_1 = "There are {delta_3} days between the two dates"
-#     else:
-#         output_string_2 = delta
-
-#     return output_string_1, output_string_2
-
-# print(time_diff())
+time_diff('2020-01-02', '2020-01-01', 'float')
 
 #exercise 4 DONE
 
@@ -199,7 +125,6 @@ k = 0
 def prob_k_heads(n: int, k: int) -> float:
     """
     """
-
     # binom coef (n choose k part is done, 
     # n_minus_k_fac is the value returned)
     n_minus_k_fac = 1
