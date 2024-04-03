@@ -16,10 +16,6 @@ import seaborn
 
 #exercise 2 DONE
 
-
-# n = 0
-
-# have n = 4 outside of function? or keep inside?
 def evens_and_odds(n: int) -> dict:
     """
     """
@@ -42,125 +38,29 @@ def evens_and_odds(n: int) -> dict:
 
 print(evens_and_odds(4))
 
-#exercise 3 eh out? meaning? explain?
-
-# need to work on this... delta output is not what we want
-
-# Please write a function called time_diff that takes as arguments 
-# two strings in the format ‘YYYY-MM-DD’ 
-# and a keyword out dictating the output. If the keyword is “float”, 
-# return the time between the two dates (in absolute value) in days. 
-# If the keyword is “string”, return “There are XX days between the two dates”. 
-# If not specified, the out keyword should be assumed to be “float”. 
-# You should use the datetime package, and no others.
-
-# For example, time_diff('2020-01-01', '2020-01-02', 'float') should return
-# 1
-
-# For example, time_diff('2020-01-03', '2020-01-01', 'string') should return
-
-# "There are 2 days between the two dates"
+#exercise 3 done
 
 from typing import Union
 import datetime
 
-#yr month day
-
-date_1 = datetime.date(2020, 1, 1)
-
-date_2 = datetime.date(2020, 1, 2)
-
-#formats date_1 and date_2 to correct format
-date_1.strftime("%Y-%m-%d")
-
-date_2.strftime("%Y-%m-%d")
-
-out = ""
-output_string = ""
-# date_1 + out 
-# how to fix?
 
 def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
     """
     Some docstrings.
     """
-    out = ""
-    date_1 = datetime.date(2020, 1, 1)
-    date_2 = datetime.date(2020, 1, 2)
-    date_3 = datetime.date(2020, 1, 3)
-    date_1.strftime("%Y-%m-%d")
-    date_2.strftime("%Y-%m-%d")
-    date_3.strftime("%Y-%m-%d")
-    delta = date_1 - date_2
-    delta_3 = date_3 - date_1
 
-    if out == "float":
-        delta, delta_3
-    # elif out == "string":
-    #     output_string = "There are {delta_3} days between the dates"
+    date_1 = datetime.datetime.strptime(date_1, '%Y-%m-%d')
+    date_2 = datetime.datetime.strptime(date_2, '%Y-%m-%d')
+    
+    delta = abs(date_2 - date_1)
         
-    # if delta < 0:
-    #     delta = abs(delta)
-    # elif delta_3 < 0:
-    #     delta_3 = abs(delta_3)
-    # else:
-    #     None
-    
-    # if delta_3 > 1 & out == "string":
-    #     output_string = "There are {delta_3} days between the dates"
-    # elif delta_3 == 1:
-    #     delta_3
-    # elif delta > 1 & out == "string":
-    #     output_string_2 = "There are {delta} days between the dates"
-    # elif delta == 1:
-    #     delta
-    # else:
-    #     None
+    if out == "string":
+        return f"There are {str(delta.days)} days between the two dates"
+    elif out == "float":
+        delta_1 = abs(date_2 - date_1)
+        return delta_1.days
 
-    return delta, delta_3, output_string
-
-print(time_diff(date_1, date_2, "float"))
-
-from typing import Union
-
-# def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
-#     """
-#     Some docstrings.
-#     """
-
-#     return None
-
-    # should return a string (date) OR a float (delta/delta_3)
-    # return output_string, output_string_2, delta, delta_3
-
-# print(time_diff(date_1, date_2, "string"))
-# want to return something that checks second ifelse block, 
-# includes output_strings with dates associated with them
-
-# def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
-#     """
-#     """
-#     date_3 = datetime.date(2020, 1, 3)
-#     date_3.strftime("%Y-%m-%d")
-#     delta = date_1 - date_2
-#     delta_3 = date_3 - date_1
-
-#     if delta or delta_3 < 0:
-#         delta = delta * -1
-#         delta_3 = delta_3 * -1
-#     else:
-#         delta
-#         delta_3
-    
-#     #
-#     if out == "float":
-#         output_string_1 = "There are {delta_3} days between the two dates"
-#     else:
-#         output_string_2 = delta
-
-#     return output_string_1, output_string_2
-
-# print(time_diff())
+print(time_diff('2020-01-03', '2020-01-01', 'float'))
 
 #exercise 4 DONE
 
@@ -179,27 +79,14 @@ results_4 = reverse(in_list)
 
 print(results_4)
 
-#exercise 5 ?
+#exercise 5 done
 
-# Write a function called prob_k_heads that takes as its arguments natural numbers n 
-# and k with n>k and returns the probability of getting k heads from n flips 3.
-
-#this is a binomial distribution
-
-# (n!/k!(n-k)!) * p^x * q^n-x
-
-# For example, prob_k_heads(1,1) should return
-
-# .5
-# using slide code
-# p^x * q^n-x
 n = 0
 k = 0
 
 def prob_k_heads(n: int, k: int) -> float:
     """
     """
-
     # binom coef (n choose k part is done, 
     # n_minus_k_fac is the value returned)
     n_minus_k_fac = 1
@@ -219,16 +106,8 @@ def prob_k_heads(n: int, k: int) -> float:
         p_val = 0.5**i
         q_val = 0.5**(n - i)
 
-    binom_prob = n_minus_k_fac * p_val * q_val
+    binom_prob = n_choose_k * p_val * q_val
 
     return binom_prob
 
-print(prob_k_heads(1, 1))
-
-# 3 should reutrn 0.375
-#  check fsctrorial
-
-# returns 0.5, not .5?
-
-# for 3 flips, i expect 1 head, which should be 0.33? but returns 0.75?
-# or is this wrong logic?
+print(prob_k_heads(3, 1))
