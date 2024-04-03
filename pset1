@@ -16,10 +16,6 @@ import seaborn
 
 #exercise 2 DONE
 
-
-# n = 0
-
-# have n = 4 outside of function? or keep inside?
 def evens_and_odds(n: int) -> dict:
     """
     """
@@ -42,43 +38,21 @@ def evens_and_odds(n: int) -> dict:
 
 print(evens_and_odds(4))
 
-#exercise 3 eh out? meaning? explain?
-
-# need to work on this... delta output is not what we want
-
-# Please write a function called time_diff that takes as arguments 
-# two strings in the format ‘YYYY-MM-DD’ 
-# and a keyword out dictating the output. If the keyword is “float”, 
-# return the time between the two dates (in absolute value) in days. 
-# If the keyword is “string”, return “There are XX days between the two dates”. 
-# If not specified, the out keyword should be assumed to be “float”. 
-# You should use the datetime package, and no others.
-
-# For example, time_diff('2020-01-01', '2020-01-02', 'float') should return
-# 1
-
-# For example, time_diff('2020-01-03', '2020-01-01', 'string') should return
-
-# "There are 2 days between the two dates"
+#exercise 3 done
 
 from typing import Union
 import datetime
 
-#yr month day
 
 def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
     """
     Some docstrings.
     """
-    # want to go from string to datetime
-
-    # change datetime to int for elif
 
     date_1 = datetime.datetime.strptime(date_1, '%Y-%m-%d')
     date_2 = datetime.datetime.strptime(date_2, '%Y-%m-%d')
     
     delta = abs(date_2 - date_1)
-
         
     if out == "string":
         return f"There are {str(delta.days)} days between the two dates"
@@ -86,7 +60,7 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
         delta_1 = abs(date_2 - date_1)
         return delta_1.days
 
-time_diff('2020-01-02', '2020-01-01', 'float')
+print(time_diff('2020-01-03', '2020-01-01', 'float'))
 
 #exercise 4 DONE
 
@@ -105,20 +79,8 @@ results_4 = reverse(in_list)
 
 print(results_4)
 
-#exercise 5 ?
+#exercise 5 done
 
-# Write a function called prob_k_heads that takes as its arguments natural numbers n 
-# and k with n>k and returns the probability of getting k heads from n flips 3.
-
-#this is a binomial distribution
-
-# (n!/k!(n-k)!) * p^x * q^n-x
-
-# For example, prob_k_heads(1,1) should return
-
-# .5
-# using slide code
-# p^x * q^n-x
 n = 0
 k = 0
 
@@ -144,13 +106,8 @@ def prob_k_heads(n: int, k: int) -> float:
         p_val = 0.5**i
         q_val = 0.5**(n - i)
 
-    binom_prob = n_minus_k_fac * p_val * q_val
+    binom_prob = n_choose_k * p_val * q_val
 
     return binom_prob
 
-print(prob_k_heads(1, 1))
-
-# returns 0.5, not .5?
-
-# for 3 flips, i expect 1 head, which should be 0.33? but returns 0.75?
-# or is this wrong logic?
+print(prob_k_heads(3, 1))
