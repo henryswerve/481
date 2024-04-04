@@ -19,7 +19,6 @@ import seaborn
 def evens_and_odds(n: int) -> dict:
     """
     """
-    n = 4
     evensum = 0
     oddsum = 0
     dict_1 = {
@@ -60,7 +59,9 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
         delta_1 = abs(date_2 - date_1)
         return delta_1.days
 
-print(time_diff('2020-01-03', '2020-01-01', 'float'))
+print(time_diff('2020-01-03', '2020-01-01', 'string'))
+print(time_diff('2020-01-02', '2020-01-01', 'float'))
+
 
 #exercise 4 DONE
 
@@ -110,4 +111,4 @@ def prob_k_heads(n: int, k: int) -> float:
 
     return binom_prob
 
-print(prob_k_heads(3, 1))
+print(prob_k_heads(1, 1))
