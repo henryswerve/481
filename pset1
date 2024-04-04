@@ -18,8 +18,13 @@ import seaborn
 
 def evens_and_odds(n: int) -> dict:
     """
+    Takes in a variable n of type int and outputs a dictionary with key values
+    'evens' and 'odds'. we create empty variables evensum/oddsum and an 
+    empty dictionary. The for loop differentiates between evens and odds by
+    whether i % 2 has a result of 0, and adds to the total evensum, else we add
+    to the total oddsum. We then add these values to the dictionary depending on 
+    total type (even or odd) and return that dictionary called dict_1.
     """
-    n = 4
     evensum = 0
     oddsum = 0
     dict_1 = {
@@ -38,7 +43,7 @@ def evens_and_odds(n: int) -> dict:
 
 print(evens_and_odds(4))
 
-#exercise 3 done
+#exercise 3
 
 from typing import Union
 import datetime
@@ -46,7 +51,12 @@ import datetime
 
 def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
     """
-    Some docstrings.
+    Function takes in date_1, date_2, and out which are all type string.
+    Date_1 and date_2 are changed into datetime objects. Delta takes the absolute 
+    difference between date_2 and date_1. The if else statement outputs a string if
+    out is "string", changing the variable delta into a string, else outputs the absolute
+    difference between date_2 and date_1 if out is "float".
+
     """
 
     date_1 = datetime.datetime.strptime(date_1, '%Y-%m-%d')
@@ -62,13 +72,15 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
 
 print(time_diff('2020-01-03', '2020-01-01', 'float'))
 
-#exercise 4 DONE
+#exercise 4
 
 in_list = ['a', 'b', 'c']
 
 def reverse(in_list: list) -> list:
     """
-    want to reverse order of list.
+    Takes in a list and outputs one as well. We create an empty list
+    called newlist, and we return that newlist after using the reversed 
+    function.
     """
     newlist = []
     newlist = list(reversed(in_list))
@@ -79,13 +91,21 @@ results_4 = reverse(in_list)
 
 print(results_4)
 
-#exercise 5 done
+#exercise 5
 
 n = 0
 k = 0
 
 def prob_k_heads(n: int, k: int) -> float:
     """
+    Takes in variables n and k, which are both type int and outputs a 
+    float value denoting the binomial probability. We determine the binomial
+    coefficient using the two for loops (ty Lukas for the code), storing the value
+    under n_choose_k. We create two empty variables of type int called p_val and
+    q_val for the rest of the distribution equation. The for loop determines the values
+    for p_val and q_val, where we raise 0.5 to the power i for the range of n to determine 
+    the probability of successes, and q_val to the n - i for to determine the failures in the trials. 
+    We then output binom_prob, which is the product of n_choose_k, p_val and q_val.
     """
     # binom coef (n choose k part is done, 
     # n_minus_k_fac is the value returned)
@@ -110,4 +130,4 @@ def prob_k_heads(n: int, k: int) -> float:
 
     return binom_prob
 
-print(prob_k_heads(3, 1))
+print(prob_k_heads(1, 1))
