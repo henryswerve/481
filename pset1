@@ -14,31 +14,36 @@ import scipy
 import matplotlib
 import seaborn
 
-#exercise 2 DONE
+#exercise 2
 
 def evens_and_odds(n: int) -> dict:
     """
-    Takes in a variable n of type int and outputs a dictionary with key values
+    Takes in a variable n of type int and outputs a dictionary with empty key values
     'evens' and 'odds'. we create empty variables evensum/oddsum and an 
     empty dictionary. The for loop differentiates between evens and odds by
     whether i % 2 has a result of 0, and adds to the total evensum, else we add
     to the total oddsum. We then add these values to the dictionary depending on 
     total type (even or odd) and return that dictionary called dict_1.
     """
+    
+    # create empty variables and dictionary for use in function
     evensum = 0
     oddsum = 0
     dict_1 = {
-    'evens': [],
-    'odds': [],
+    'evens': 0,
+    'odds': 0,
     }
     
+    # if i % 2 == 0, add to evensum total, else add to oddsum
     for i in range(n):
         if i % 2 == 0:
             evensum += i
         else:
             oddsum += i
-    dict_1['evens'].append(evensum)
-    dict_1['odds'].append(oddsum)
+
+    # assigns key values to variables added from for loop above
+    dict_1['evens'] = evensum
+    dict_1['odds'] = oddsum
     return dict_1
 
 print(evens_and_odds(4))
@@ -59,11 +64,14 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
 
     """
 
+    # converts string to datetime objects
     date_1 = datetime.datetime.strptime(date_1, '%Y-%m-%d')
     date_2 = datetime.datetime.strptime(date_2, '%Y-%m-%d')
     
+    # takes absolute difference between date_1 and date_2
     delta = abs(date_2 - date_1)
         
+    # if/elif outputs string or float value for printing
     if out == "string":
         return f"There are {str(delta.days)} days between the two dates"
     elif out == "float":
@@ -72,7 +80,7 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
 
 print(time_diff('2020-01-03', '2020-01-01', 'float'))
 
-#exercise 4
+# exercise 4
 
 in_list = ['a', 'b', 'c']
 
@@ -82,16 +90,17 @@ def reverse(in_list: list) -> list:
     called newlist, and we return that newlist after using the reversed 
     function.
     """
+    
+    # create empty list called newlist and reverse it
     newlist = []
     newlist = list(reversed(in_list))
     
+    # return newlist
     return newlist
 
-results_4 = reverse(in_list)
+print(reverse(in_list))
 
-print(results_4)
-
-#exercise 5
+# exercise 5
 
 n = 0
 k = 0
@@ -107,6 +116,7 @@ def prob_k_heads(n: int, k: int) -> float:
     the probability of successes, and q_val to the n - i for to determine the failures in the trials. 
     We then output binom_prob, which is the product of n_choose_k, p_val and q_val.
     """
+
     # binom coef (n choose k part is done, 
     # n_minus_k_fac is the value returned)
     n_minus_k_fac = 1
