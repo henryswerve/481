@@ -1,12 +1,17 @@
-#exercise 0
+# Henry Tran
+# 4/3/24
+# ECON 481
+# PSET 1
+
+# exercise 0
 
 def github() -> str:
     """
-    comment
+    Returns my github link hopefully
     """
     return "https://github.com/henryswerve/481.git"
 
-#exercise 1
+# exercise 1
 
 import numpy
 import pandas
@@ -48,7 +53,7 @@ def evens_and_odds(n: int) -> dict:
 
 print(evens_and_odds(4))
 
-#exercise 3
+# exercise 3
 
 from typing import Union
 import datetime
@@ -95,7 +100,6 @@ def reverse(in_list: list) -> list:
     newlist = []
     newlist = list(reversed(in_list))
     
-    # return newlist
     return newlist
 
 print(reverse(in_list))
