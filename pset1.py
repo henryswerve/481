@@ -83,7 +83,9 @@ def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
         delta_1 = abs(date_2 - date_1)
         return delta_1.days
 
-print(time_diff('2020-01-03', '2020-01-01', 'float'))
+print(time_diff('2020-01-03', '2020-01-01', 'string'))
+print(time_diff('2020-01-02', '2020-01-01', 'float'))
+
 
 # exercise 4
 
