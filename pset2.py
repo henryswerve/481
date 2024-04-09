@@ -103,6 +103,9 @@ y = y_array[:, 0].reshape(1000, 1)
 
 # pass in x and y from above
 # use scipy
+
+print("commit")
+
 def estimate_mle(y: np.array, X: np.array) -> np.array:
     """
     Some docstrings.
