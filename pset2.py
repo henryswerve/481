@@ -3,7 +3,7 @@
 # Pset 2
 
 import numpy as np
-import scipy.optimize
+import scipy.optimize as sp
 
 # exercise 0 
 
@@ -67,41 +67,54 @@ def simulate_data(seed: int) -> tuple:
     """
     Some docstrings.
     """
-    
     seed = np.random.default_rng(seed = seed)
-    plus_5 = 5 * np.ones((1000, 1))
     x_1 = seed.normal(0, 2, 1000)
     x_2 = seed.normal(0, 2, 1000)
     x_3 = seed.normal(0, 2, 1000)
-    e_i = seed.normal(0, 1)
-    y = seed.normal(0, 2, 1000)
-
-
-    # how do i have it so that newx_1, newx_2, ... aren't all the same values? want to add coefficent
-    newx_1 = 3 * x_1 + plus_5 
-    newx_2 = 2 * x_2 + plus_5
-    newx_3 = 6 * x_3 + plus_5
-    X_tobe = np.array([x_1, x_2, x_3])
+    e_i = seed.normal(0, 1, 1000)
+    y = np.zeros([1000, 1])
+    y_tobe = np.array([3 * x_1 + 2 * x_2 + 6 * x_3 + e_i + 5])
+    X_tobe = np.array([3 * x_1, 2 * x_2, 6 * x_3])
     X = np.transpose(X_tobe)
-
-    y_tobe = np.array([y])
     y = np.transpose(y_tobe)
 
     y_and_x = (y, X)
     return y_and_x
 
-print(simulate_data(481))
+# print(simulate_data(481))
 
+prob_1_array = simulate_data(481)
+
+# print(prob_1_array)
+
+y_array = prob_1_array[0]
+x = prob_1_array[1]
+# gives us (1000, 3) which is what we want?
+# print(x.shape)
+# y = y_array[:, 0]
+
+# y is good, what about x?
+y = y_array[:, 0].reshape(1000, 1)
+# print(y.shape)
+# print(y)
 # exercise 2
 
 # print(y_and_x)
+
+# pass in x and y from above
+# use scipy
+
+print("commit")
 
 def estimate_mle(y: np.array, X: np.array) -> np.array:
     """
     Some docstrings.
     """
-
-
+    seed = np.random.default_rng(seed = 481)
+    e_i = seed.normal(0, 1, 1000)
+    sp.optimize.minimize(
+        # fun = 
+    )
     return None
 
 # print(estimate_mle())
