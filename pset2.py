@@ -67,7 +67,8 @@ def simulate_data(seed: int) -> tuple:
     """
     Some docstrings.
     """
-    seed = np.random.default_rng(seed = 481)
+    
+    seed = np.random.default_rng(seed = seed)
     plus_5 = 5 * np.ones((1000, 1))
     x_1 = seed.normal(0, 2, 1000)
     x_2 = seed.normal(0, 2, 1000)
@@ -75,7 +76,9 @@ def simulate_data(seed: int) -> tuple:
     e_i = seed.normal(0, 1)
     y = seed.normal(0, 2, 1000)
 
-    newx_1 = 3 * x_1 + plus_5
+
+    # how do i have it so that newx_1, newx_2, ... aren't all the same values? want to add coefficent
+    newx_1 = 3 * x_1 + plus_5 
     newx_2 = 2 * x_2 + plus_5
     newx_3 = 6 * x_3 + plus_5
     X_tobe = np.array([x_1, x_2, x_3])

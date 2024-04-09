@@ -58,7 +58,6 @@ print(evens_and_odds(4))
 from typing import Union
 import datetime
 
-
 def time_diff(date_1: str, date_2: str, out: str) -> Union[str,float]:
     """
     Function takes in date_1, date_2, and out which are all type string.
