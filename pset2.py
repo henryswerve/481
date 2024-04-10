@@ -85,7 +85,7 @@ def simulate_data(seed: int) -> tuple:
 
 prob_1_array = simulate_data(481)
 
-print(prob_1_array)
+# print(prob_1_array)
 
 y_array = prob_1_array[0]
 X = prob_1_array[1]
@@ -93,21 +93,28 @@ y = y_array[:, 0].reshape(1000, 1)
 
 # exercise 2
 
-print(X.shape)
+# print(X.shape)
 
 # pass in x and y from above
 # use scipy
 
-# def mle_fun(y: np.array, X: np.array) -> function:
-#     """
-#     blah blah
-#     """
+beta = np.zeros([3, 1]) # must be 3, 1 to run my function... why not 4,1?
+# print(beta)
 
-#     # mle_formula = ...
 
-#     return None # mle_formula
+# print(X.shape)
 
-def estimate_mle(y: np.array, X: np.array) -> np.array:
+def mle_fun(beta: np.array, y: np.array, X: np.array) -> tuple:
+    """
+    blah blah
+    """
+    sse = np.sum(np.square(y - X @ beta))
+
+    return sse 
+
+print(mle_fun(beta, y, X))
+
+def estimate_mle(mle_fun: np.array, y: np.array, X: np.array) -> np.array:
     """
     Some docstrings.
     """
@@ -117,7 +124,7 @@ def estimate_mle(y: np.array, X: np.array) -> np.array:
 
     
     sp.optimize.minimize(
-        # fun = ) are we creating a function inside this function to conduct mle?
+        # fun = mle_fun are we creating a function inside this function to conduct mle?
         # return the function and call it within this minimizing function?
     
     )
