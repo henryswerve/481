@@ -68,18 +68,19 @@ X = simulate_data(481)[1]
 
 # print(sse_fun(beta, y, X))
 
-# def sse_function(y: np.array, X: np.array) -> tuple:
+beta = (0, 0, 0)
+def sse_function(beta: np.array, y: np.array, X: np.array) -> tuple:
 
-#     beta = (0, 0, 0)
-#     sse_use = np.sum(np.square(y - X @ beta))
-
-#     return sse_use
-
-def sse_function_1(y: np.array, X: np.array) -> tuple:
-
-    sse_use = np.sum(np.square(y - X @ (0, 0, 0)))
+    # beta = (0, 0, 0)
+    sse_use = np.sum(np.square(y - X @ beta))
 
     return sse_use
+
+# def sse_function_1(y: np.array, X: np.array) -> tuple:
+
+#     sse_use = np.sum(np.square(y - X @ (0, 0, 0)))
+
+#     return sse_use
 
 # print(sse_function(y, X))
 
