@@ -35,6 +35,7 @@ def simulate_data(seed: int) -> tuple:
     X = np.transpose(X_tobe)
     y = np.transpose(y_tobe)
     y_and_x = (y, X)
+
     return y_and_x
 
 y, X = simulate_data(481)
@@ -43,6 +44,7 @@ y, X = simulate_data(481)
 
 # helper function for exercise 2
 def mle_func(beta: np.array, y: np.array, X: np.array) -> tuple:
+    
     sse = np.sum((y - X @ beta.reshape(-1, 1)) ** 2)
     log_likely = -np.sum(sse**2/2) - 500 * np.log(2 * np.pi)
 
@@ -77,6 +79,7 @@ print(estimate_mle(y, X))
 def sse_function(beta: np.array, y: np.array, X: np.array) -> tuple:
 
     sse_use = np.sum((y - X @ beta.reshape((-1, 1))) ** 2)
+
     return sse_use
 
 def estimate_ols(y: np.array, X: np.array) -> np.array:
