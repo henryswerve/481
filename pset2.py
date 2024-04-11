@@ -3,7 +3,7 @@
 # Pset 2
 
 import numpy as np
-import scipy.optimize as sp
+import scipy as sp
 
 # exercise 0 
 
@@ -16,52 +16,7 @@ def github() -> str:
 
 # exercise 1 done
 
-# please write a function that returns 1000 simulated observations via the
-# following data generating process:
-# y_i = 5 + 3 * x_i1 + 2 * x_i2 + 6 * x_i3 + e_i
-# x_i1, x_i2, x_i3 ~ N(0,2) and e_i ~ N(0,1)
-# N(mu, sigma). mu is 0 for x_i1 -> x_i3, variance is 2. 
-# mu is 0 for e_i, variance is 1
-
 seed = 481
-
-# x_1 = np.random.normal(0, 2, 1000)
-# x_2 = np.random.normal(0, 2, 1000)
-# x_3 = np.random.normal(0, 2, 1000)
-# e_i = np.random.normal(0, 1)
-# y = np.random.normal(0, 2, 1000)
-
-# newx_1 = 3 * x_1
-# newx_2 = 2 * x_2
-# newx_3 = 6 * x_3
-
-# y = np.array([y])
-# y_T = np.transpose(y)
-# print(y_T.shape)
-# print(y_T)
-# print(y)
-
-# X = np.array([x_1, x_2, x_3])
-
-# empty = (0 , 0)
-
-# np.asarray(empty)
-
-# print(empty)
-
-# fits 1000 x 3 per the problem
-
-# X_T = np.transpose(X)
-
-# print(X_T)
-
-# empty_tuple = np.asarray((y_T, X_T), dtype = tuple)
-
-# empty_tuple = (y_T.flatten(), X_T)
-
-# print(empty_tuple)
-
-# print(len(empty_tuple))
 
 def simulate_data(seed: int) -> tuple:
     """
@@ -81,38 +36,33 @@ def simulate_data(seed: int) -> tuple:
     y_and_x = (y, X)
     return y_and_x
 
-# print(simulate_data(481))
-
 prob_1_array = simulate_data(481)
 
-# print(prob_1_array)
-
-y_array = prob_1_array[0]
+y = prob_1_array[0]
 X = prob_1_array[1]
-y = y_array[:, 0].reshape(1000, 1)
 
 # exercise 2
 
-# print(X.shape)
 
 # pass in x and y from above
 # use scipy
 
-beta = np.zeros([3, 1]) # must be 3, 1 to run my function... why not 4,1?
+beta = np.zeros([4, 1]) # must be 3, 1 to run my function... why not 4,1?
 # print(beta)
 
 
 # print(X.shape)
 
-def mle_fun(beta: np.array, y: np.array, X: np.array) -> tuple:
+def sse_fun(beta: np.array, y: np.array, X: np.array) -> tuple:
     """
     blah blah
     """
+    X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
     sse = np.sum(np.square(y - X @ beta))
 
     return sse 
 
-print(mle_fun(beta, y, X))
+print(sse_fun(beta, y, X))
 
 def estimate_mle(mle_fun: np.array, y: np.array, X: np.array) -> np.array:
     """
@@ -123,24 +73,31 @@ def estimate_mle(mle_fun: np.array, y: np.array, X: np.array) -> np.array:
     e_i = seed.normal(0, 1, 1000)
 
     
-    sp.optimize.minimize(
-        # fun = mle_fun are we creating a function inside this function to conduct mle?
-        # return the function and call it within this minimizing function?
-    
-    )
-    return None
+    # estimation = sp.optimize.minimize(
+    #     fun = sse_fun,
+    #     args = (y, X),
+    #     x0 = beta,
+    #     method = 'Nelder-Mead'
+    #     )
+    # return estimation
 
 # print(estimate_mle())
 
 # exercise 3
 
 
-def estimate_ols(y: np.array, X: np.array) -> np.array:
+def estimate_ols(beta: np.array, y: np.array, X: np.array) -> np.array:
     """
     Some docstrings.
     """
+    estimation = np.zeros([4, 1])
+    beta = beta.flatten()
+    estimation = sp.optimize.minimize(
+        fun = sse_fun,
+        args = (y, X),
+        x0 = beta,
+        method = 'Nelder-Mead'
+        )
+    return estimation
 
-    return None
-
-
-# OH notes:
+print(estimate_ols(beta, y, X))
