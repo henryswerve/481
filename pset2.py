@@ -29,17 +29,17 @@ def simulate_data(seed: int) -> tuple:
     e_i = np.random.normal(0, 1, 1000)
     y = np.zeros([1000, 1])
     y_tobe = np.array([3 * x_1 + 2 * x_2 + 6 * x_3 + e_i + 5])
-    X_tobe = np.array([3 * x_1, 2 * x_2, 6 * x_3])
+    X_tobe = np.array([x_1, x_2, x_3])
     X = np.transpose(X_tobe)
     y = np.transpose(y_tobe)
-
+    print(y.shape)
     y_and_x = (y, X)
     return y_and_x
 
 # prob_1_array = simulate_data(481)
 
-y = simulate_data(481)[0]
-X = simulate_data(481)[1]
+# y = simulate_data(481)[0]
+y, X = simulate_data(481)
 
 # print(y)
 # print(X.shape)
@@ -68,11 +68,10 @@ X = simulate_data(481)[1]
 
 # print(sse_fun(beta, y, X))
 
-beta = (0, 0, 0)
 def sse_function(beta: np.array, y: np.array, X: np.array) -> tuple:
 
     # beta = (0, 0, 0)
-    sse_use = np.sum(np.square(y - X @ beta))
+    sse_use = np.sum((y - X @ beta.reshape((-1, 1))) ** 2)
 
     return sse_use
 
@@ -113,8 +112,9 @@ def estimate_ols(y: np.array, X: np.array) -> np.array:
     Some docstrings.
     """
     beta = (0, 0, 0, 0)
-    X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
-    
+    X = np.c_[np.ones(X.shape[0]).reshape(-1, 1), X]
+    print(X)
+
     estimation = sp.optimize.minimize(
         fun = sse_function,
         args = (y, X),
