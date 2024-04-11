@@ -67,44 +67,51 @@ X = simulate_data(481)[1]
 #     return sse
 
 # print(sse_fun(beta, y, X))
-beta = (0, 0, 0)
-def sse_function(beta: np.array, y: np.array, X: np.array) -> np.array:
 
-    # beta = (0, 0, 0)
-    sse_use = np.sum(np.square(y - X @ beta))
+# def sse_function(y: np.array, X: np.array) -> tuple:
+
+#     beta = (0, 0, 0)
+#     sse_use = np.sum(np.square(y - X @ beta))
+
+#     return sse_use
+
+def sse_function_1(y: np.array, X: np.array) -> tuple:
+
+    sse_use = np.sum(np.square(y - X @ (0, 0, 0)))
+
     return sse_use
 
-print(sse_function(beta, y, X))
+# print(sse_function(y, X))
 
-def estimate_mle(y: np.array, X: np.array) -> np.array:
-    """
-    Some docstrings.
-    """
-    beta = (0, 0, 0, 0)
-    X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
-    empty_array = np.zeros([4, 1]) # empty array for returning beta coefficients
-    sse = np.sum(np.square(y - X @ beta))
-    log_likely = -np.sum(sse**2/2) - 1000 / 2 * np.log(2 * np.pi * 1)
+# def estimate_mle(y: np.array, X: np.array) -> np.array:
+#     """
+#     Some docstrings.
+#     """
+#     X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
+#     empty_array = np.zeros([4, 1]) # empty array for returning beta coefficients
+#     beta = (0, 0, 0, 0)
+#     sse = np.sum(np.square(y - X @ beta))
+#     log_likely = -np.sum(sse**2/2) - 1000 / 2 * np.log(2 * np.pi * 1)
     
-    estimation = sp.optimize.minimize(
-        fun = log_likely,
-        args = (y, X),
-        x0 = (0, 0, 0, 0),
-        method = 'Nelder-Mead'
-        )
+#     estimation = sp.optimize.minimize(
+#         fun = log_likely,
+#         args = (y, X),
+#         x0 = (0, 0, 0, 0),
+#         method = 'Nelder-Mead'
+#         )
     
-    return estimation
+#     return estimation
 
 # print(estimate_mle(y, X))
 
 # exercise 3
-# beta = (0, 0, 0, 0)
 
-def estimate_ols( y: np.array, X: np.array) -> np.array:
+
+def estimate_ols(y: np.array, X: np.array) -> np.array:
     """
     Some docstrings.
     """
-
+    beta = (0, 0, 0, 0)
     X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
     
     estimation = sp.optimize.minimize(
@@ -115,7 +122,6 @@ def estimate_ols( y: np.array, X: np.array) -> np.array:
         )
     
     estimation_result = np.array(estimation.x)
-    
     return estimation_result.reshape(-1, 1)
 
 print(estimate_ols(y, X))
