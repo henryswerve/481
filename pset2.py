@@ -20,7 +20,9 @@ seed = 481
 
 def simulate_data(seed: int) -> tuple:
     """
-    Some docstrings.
+    Simulates 1000 trials for x values under N ~ (0, 2), where y is the 
+    output variable. We then create arrays for y and X, transpose them and 
+    return both as a tuple
     """
     np.random.seed(481)
     x_1 = np.random.normal(0, np.sqrt(2), 1000)
@@ -38,29 +40,27 @@ def simulate_data(seed: int) -> tuple:
 y, X = simulate_data(481)
 
 # exercise 2
-#beta = (0, 0, 0, 0)
 
-def sse_function(beta: np.array, y: np.array, X: np.array) -> tuple:
+# helper function for exercise 2
+def mle_func(beta: np.array, y: np.array, X: np.array) -> tuple:
+    sse = np.sum((y - X @ beta.reshape(-1, 1)) ** 2)
+    log_likely = -np.sum(sse**2/2) - 500 * np.log(2 * np.pi)
 
-    # beta = (0, 0, 0)
-    sse_use = np.sum((y - X @ beta.reshape((-1, 1))) ** 2)
-    return sse_use
-
-# print(sse_function(y, X))
-
-# print(X.shape)
+    return -log_likely
 
 def estimate_mle(y: np.array, X: np.array) -> np.array:
     """
-    Some docstrings.
+    Adds extra column of 1s to X array for intercept term. We then run
+    minimization function calling in our log_likelihood function from above
+    to estimate our beta coefficients. We then output the the coefficients
+    in a 4x1 array
+    Wrong output for the first coefficient (not close to 5)
     """
     beta = (0, 0, 0, 0)
     X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
-    sse = np.sum(np.square(y - X @ beta) ** 2)
-    log_likely = -np.sum(sse**2/2) - 1000 / 2 * np.log(2 * np.pi * 1)
-    
+
     prob2_results = sp.optimize.minimize(
-        fun = estimate_mle,
+        fun = mle_func,
         args = (y, X),
         x0 = (0, 0, 0, 0),
         method = 'Nelder-Mead'
@@ -69,14 +69,22 @@ def estimate_mle(y: np.array, X: np.array) -> np.array:
     prob2_results = prob2_results.x
     return prob2_results.reshape(-1, 1)
 
-estimate_mle(y, X)
+print(estimate_mle(y, X))
 
 # exercise 3
 
+# helper function for exercise 3
+def sse_function(beta: np.array, y: np.array, X: np.array) -> tuple:
+
+    sse_use = np.sum((y - X @ beta.reshape((-1, 1))) ** 2)
+    return sse_use
 
 def estimate_ols(y: np.array, X: np.array) -> np.array:
     """
-    Some docstrings.
+    Adds extra column of 1s to X array for intercept term, then we run
+    minimization function calling in our sse function from above
+    to estimate our beta coefficients. We then output the the coefficients
+    in a 4x1 array
     """
     X = np.c_[np.ones(X.shape[0]).reshape(-1, 1), X]
     estimation = sp.optimize.minimize(
