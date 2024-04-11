@@ -22,11 +22,11 @@ def simulate_data(seed: int) -> tuple:
     """
     Some docstrings.
     """
-    seed = np.random.default_rng(seed = seed)
-    x_1 = seed.normal(0, np.sqrt(2), 1000)
-    x_2 = seed.normal(0, np.sqrt(2), 1000)
-    x_3 = seed.normal(0, np.sqrt(2), 1000)
-    e_i = seed.normal(0, 1, 1000)
+    np.random.seed(481)
+    x_1 = np.random.normal(0, np.sqrt(2), 1000)
+    x_2 = np.random.normal(0, np.sqrt(2), 1000)
+    x_3 = np.random.normal(0, np.sqrt(2), 1000)
+    e_i = np.random.normal(0, 1, 1000)
     y = np.zeros([1000, 1])
     y_tobe = np.array([3 * x_1 + 2 * x_2 + 6 * x_3 + e_i + 5])
     X_tobe = np.array([3 * x_1, 2 * x_2, 6 * x_3])
@@ -36,68 +36,86 @@ def simulate_data(seed: int) -> tuple:
     y_and_x = (y, X)
     return y_and_x
 
-prob_1_array = simulate_data(481)
+# prob_1_array = simulate_data(481)
 
-y = prob_1_array[0]
-X = prob_1_array[1]
+y = simulate_data(481)[0]
+X = simulate_data(481)[1]
+
+# print(y)
+# print(X.shape)
+
+
+# y = prob_1_array[0]
+# X = prob_1_array[1]
 
 # exercise 2
 
+# print(y)
 
 # pass in x and y from above
 # use scipy
 
-beta = np.zeros([4, 1]) # must be 3, 1 to run my function... why not 4,1?
-# print(beta)
+# beta = (0, 0, 0, 0)
 
+# def sse_fun(beta: np.array, y: np.array, X: np.array) -> tuple:
+#     """
+#     blah blah
+#     """
+#     X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
+#     sse = np.sum(np.square(y - X @ beta))
 
-# print(X.shape)
+#     return sse
 
-def sse_fun(beta: np.array, y: np.array, X: np.array) -> tuple:
+# print(sse_fun(beta, y, X))
+beta = (0, 0, 0)
+def sse_function(beta: np.array, y: np.array, X: np.array) -> np.array:
+
+    # beta = (0, 0, 0)
+    sse_use = np.sum(np.square(y - X @ beta))
+    return sse_use
+
+print(sse_function(beta, y, X))
+
+def estimate_mle(y: np.array, X: np.array) -> np.array:
     """
-    blah blah
+    Some docstrings.
     """
+    beta = (0, 0, 0, 0)
     X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
-    sse = np.sum(np.square(y - X @ beta))
-
-    return sse 
-
-print(sse_fun(beta, y, X))
-
-def estimate_mle(mle_fun: np.array, y: np.array, X: np.array) -> np.array:
-    """
-    Some docstrings.
-    """
     empty_array = np.zeros([4, 1]) # empty array for returning beta coefficients
-    seed = np.random.default_rng(seed = 481)
-    e_i = seed.normal(0, 1, 1000)
-
+    sse = np.sum(np.square(y - X @ beta))
+    log_likely = -np.sum(sse**2/2) - 1000 / 2 * np.log(2 * np.pi * 1)
     
-    # estimation = sp.optimize.minimize(
-    #     fun = sse_fun,
-    #     args = (y, X),
-    #     x0 = beta,
-    #     method = 'Nelder-Mead'
-    #     )
-    # return estimation
-
-# print(estimate_mle())
-
-# exercise 3
-
-
-def estimate_ols(beta: np.array, y: np.array, X: np.array) -> np.array:
-    """
-    Some docstrings.
-    """
-    estimation = np.zeros([4, 1])
-    beta = beta.flatten()
     estimation = sp.optimize.minimize(
-        fun = sse_fun,
+        fun = log_likely,
         args = (y, X),
-        x0 = beta,
+        x0 = (0, 0, 0, 0),
         method = 'Nelder-Mead'
         )
+    
     return estimation
 
-print(estimate_ols(beta, y, X))
+# print(estimate_mle(y, X))
+
+# exercise 3
+# beta = (0, 0, 0, 0)
+
+def estimate_ols( y: np.array, X: np.array) -> np.array:
+    """
+    Some docstrings.
+    """
+
+    X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
+    
+    estimation = sp.optimize.minimize(
+        fun = sse_function,
+        args = (y, X),
+        x0 = (0, 0, 0, 0),
+        method = 'Nelder-Mead'
+        )
+    
+    estimation_result = np.array(estimation.x)
+    
+    return estimation_result.reshape(-1, 1)
+
+print(estimate_ols(y, X))
