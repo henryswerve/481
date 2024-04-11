@@ -32,77 +32,44 @@ def simulate_data(seed: int) -> tuple:
     X_tobe = np.array([x_1, x_2, x_3])
     X = np.transpose(X_tobe)
     y = np.transpose(y_tobe)
-    print(y.shape)
     y_and_x = (y, X)
     return y_and_x
 
-# prob_1_array = simulate_data(481)
-
-# y = simulate_data(481)[0]
 y, X = simulate_data(481)
 
-# print(y)
-# print(X.shape)
-
-
-# y = prob_1_array[0]
-# X = prob_1_array[1]
-
 # exercise 2
-
-# print(y)
-
-# pass in x and y from above
-# use scipy
-
-# beta = (0, 0, 0, 0)
-
-# def sse_fun(beta: np.array, y: np.array, X: np.array) -> tuple:
-#     """
-#     blah blah
-#     """
-#     X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
-#     sse = np.sum(np.square(y - X @ beta))
-
-#     return sse
-
-# print(sse_fun(beta, y, X))
+#beta = (0, 0, 0, 0)
 
 def sse_function(beta: np.array, y: np.array, X: np.array) -> tuple:
 
     # beta = (0, 0, 0)
     sse_use = np.sum((y - X @ beta.reshape((-1, 1))) ** 2)
-
     return sse_use
-
-# def sse_function_1(y: np.array, X: np.array) -> tuple:
-
-#     sse_use = np.sum(np.square(y - X @ (0, 0, 0)))
-
-#     return sse_use
 
 # print(sse_function(y, X))
 
-# def estimate_mle(y: np.array, X: np.array) -> np.array:
-#     """
-#     Some docstrings.
-#     """
-#     X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
-#     empty_array = np.zeros([4, 1]) # empty array for returning beta coefficients
-#     beta = (0, 0, 0, 0)
-#     sse = np.sum(np.square(y - X @ beta))
-#     log_likely = -np.sum(sse**2/2) - 1000 / 2 * np.log(2 * np.pi * 1)
-    
-#     estimation = sp.optimize.minimize(
-#         fun = log_likely,
-#         args = (y, X),
-#         x0 = (0, 0, 0, 0),
-#         method = 'Nelder-Mead'
-#         )
-    
-#     return estimation
+# print(X.shape)
 
-# print(estimate_mle(y, X))
+def estimate_mle(y: np.array, X: np.array) -> np.array:
+    """
+    Some docstrings.
+    """
+    beta = (0, 0, 0, 0)
+    X = np.c_[np.zeros(X.shape[0]).reshape(-1, 1), X]
+    sse = np.sum(np.square(y - X @ beta) ** 2)
+    log_likely = -np.sum(sse**2/2) - 1000 / 2 * np.log(2 * np.pi * 1)
+    
+    prob2_results = sp.optimize.minimize(
+        fun = estimate_mle,
+        args = (y, X),
+        x0 = (0, 0, 0, 0),
+        method = 'Nelder-Mead'
+        )
+    
+    prob2_results = prob2_results.x
+    return prob2_results.reshape(-1, 1)
+
+estimate_mle(y, X)
 
 # exercise 3
 
@@ -111,10 +78,7 @@ def estimate_ols(y: np.array, X: np.array) -> np.array:
     """
     Some docstrings.
     """
-    beta = (0, 0, 0, 0)
     X = np.c_[np.ones(X.shape[0]).reshape(-1, 1), X]
-    print(X)
-
     estimation = sp.optimize.minimize(
         fun = sse_function,
         args = (y, X),
