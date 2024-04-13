@@ -14,7 +14,7 @@ def github() -> str:
 
     return "https://github.com/henryswerve/481/blob/main/pset2.py"
 
-# exercise 1 done
+# exercise 1
 
 seed = 481
 
@@ -44,7 +44,7 @@ y, X = simulate_data(481)
 
 # helper function for exercise 2
 def mle_func(beta: np.array, y: np.array, X: np.array) -> tuple:
-    
+
     sse = np.sum((y - X @ beta.reshape(-1, 1)) ** 2)
     log_likely = -np.sum(sse**2/2) - 500 * np.log(2 * np.pi)
 
