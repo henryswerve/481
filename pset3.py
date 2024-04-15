@@ -93,6 +93,18 @@ def n_null(df: pd.DataFrame, col: str) -> int:
 # print(sorted(parent_data))
 # print(joined_data)
 
+joined_data = emissions_data.join(parent_data, how = 'left')
+joined_data = pd.merge(emissions_data, parent_data, left_on = 'FRS Id', right_on = 'FRS ID (FACILITY)')
+# print(sorted(emissions_data))
+# print(sorted(parent_data))
+# print(joined_data.head(5))
+
+joined_data_subset = joined_data.loc[
+    joined_data['Frs ID']
+]
+
+print(joined_data_subset)
+
 def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.DataFrame:
     """
     Some docstrings.
