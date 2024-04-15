@@ -26,7 +26,7 @@ def import_yearly_data(years: list) -> pd.DataFrame:
     """
     dfs = []
     for year in years:
-        directory = f'C:\\Users\\danny\\Downloads\\ghgp_data_{year}.xlsx'
+        directory = f'https://lukashager.netlify.app/econ-481/data/ghgp_data_{year}.xlsx'
         # for desktop directory
         # directory = f'C:\\Users\\henryswerve\\Downloads\\ghgp_data{year}.xlsx'
         data = pd.read_excel(directory, 'LDC - Direct Emissions', skiprows = 3)
@@ -52,9 +52,7 @@ def import_parent_companies(years: list) -> pd.DataFrame:
     """
     dfs = []
     for year in years:
-        directory = f'C:\\Users\\danny\\Downloads\\ghgp_data_parent_company_09_2023.xlsb'
-        # for desktop directory
-        # directory = f'C:\\Users\\henryswerve\\Downloads\\ghgp_data_parent_company_09_2023.xlsb'
+        directory = f'https://lukashager.netlify.app/econ-481/data/ghgp_data_parent_company_09_2023.xlsb'
         data = pd.read_excel(directory, str(year))
         data = data.replace(r'', pd.NaT)
         data = data.dropna()
@@ -66,8 +64,7 @@ parent_data = import_parent_companies(years)
 
 # exercise 3 done
 
-df = f'C:\\Users\\danny\\Downloads\\ghgp_data_parent_company_09_2023.xlsb' # desktop
-# df = f'C:\\Users\\henryswerve\\Downloads\\ghgp_data_parent_company_09_2023.xlsb' # laptop
+df = 'https://lukashager.netlify.app/econ-481/data/ghgp_data_parent_company_09_2023.xlsb'
 
 def n_null(df: pd.DataFrame, col: str) -> int:
     """
@@ -94,7 +91,7 @@ def n_null(df: pd.DataFrame, col: str) -> int:
 # joined_data = pd.merge(emissions_data, parent_data, left_on = 'FRS Id', right_on = 'FRS ID (FACILITY)')
 # print(sorted(emissions_data))
 # print(sorted(parent_data))
-print(joined_data)
+# print(joined_data)
 
 def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.DataFrame:
     """
