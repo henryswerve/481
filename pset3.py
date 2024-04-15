@@ -26,7 +26,9 @@ def import_yearly_data(years: list) -> pd.DataFrame:
     """
     dfs = []
     for year in years:
-        directory = f'C:\\Users\\danny\\Downloads\\ghgp_data_{year}.xlsx'
+        # directory = f'C:\\Users\\danny\\Downloads\\ghgp_data_{year}.xlsx'
+        # for desktop directory
+        directory = f'C:\\Users\\henryswerve\\Downloads\\ghgp_data{year}.xlsx'
         data = pd.read_excel(directory, 'LDC - Direct Emissions', skiprows = 3)
         dfs.append(data)
         data_output = pd.concat(dfs, ignore_index = True)
@@ -71,7 +73,9 @@ def import_parent_companies(years: list) -> pd.DataFrame:
     """
     dfs = []
     for year in years:
-        directory = f'C:\\Users\\danny\\Downloads\\ghgp_data_parent_company_09_2023.xlsb'
+        # directory = f'C:\\Users\\danny\\Downloads\\ghgp_data_parent_company_09_2023.xlsb'
+        # for desktop directory
+        directory = f'C:\\Users\\henryswerve\\Downloads\\ghgp_data_parent_company_09_2023.xlsb'
         data = pd.read_excel(directory, str(year))
         data = data.replace(r'', pd.NaT)
         data = data.dropna()
