@@ -173,7 +173,10 @@ def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.Da
 
 # print(clean_data(emissions_data, parent_data))
 df = clean_data(emissions_data, parent_data)
-group_vars = ['TX'] # can also be blank, meaning take mean over whole df
+# group_vars = [state, year...] # can also be blank, meaning take mean over whole df
+# can be any variable. given those variables, take the summary of the ones listed
+# in exercise 5 online
+
 # exercise 5
 
 def aggregate_emissions(df: pd.DataFrame, group_vars: list) -> pd.DataFrame:
@@ -184,10 +187,10 @@ def aggregate_emissions(df: pd.DataFrame, group_vars: list) -> pd.DataFrame:
     # sort highest to lowest mean total reported direct emissions
     # use df.groupby('blah blah')
 
-    if group_vars.str.match('[A-ZA-Z]'):
-        # look at total reported direct emissions, parent co. percent ownership
-        # at the state level
-        else:
+    # if group_vars.st
+    #     # look at total reported direct emissions, parent co. percent ownership
+    #     # at the state level
+    #     else:
         
 
     return None
