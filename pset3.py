@@ -44,13 +44,14 @@ emissions_data = import_yearly_data(years)
 
 years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 
          2017, 2018, 2019, 2020, 2021, 2022]
-# directory = f'C:\\Users\\danny\\Downloads\\ghgp_data_parent_company_09_2023.xlsb'
 
 def import_parent_companies(years: list) -> pd.DataFrame:
     """
     Some docstrings.
     """
     dfs = []
+    years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 
+         2017, 2018, 2019, 2020, 2021, 2022]
     for year in years:
         directory = f'https://lukashager.netlify.app/econ-481/data/ghgp_data_parent_company_09_2023.xlsb'
         data = pd.read_excel(directory, str(year))
@@ -93,17 +94,34 @@ def n_null(df: pd.DataFrame, col: str) -> int:
 # print(sorted(parent_data))
 # print(joined_data)
 
-joined_data = emissions_data.join(parent_data, how = 'left')
-joined_data = pd.merge(emissions_data, parent_data, left_on = 'FRS Id', right_on = 'FRS ID (FACILITY)')
-# print(sorted(emissions_data))
-# print(sorted(parent_data))
-# print(joined_data.head(5))
+# joined_data = emissions_data.join(parent_data, how = 'left')
 
-joined_data_subset = joined_data.loc[
-    joined_data['Frs ID']
-]
+# how am i supopsed to merge by year and frs id? create new column called year?
+# what is meant by subset? I tried doing it and i end up with the same amount of columns as before I subsetted
 
-print(joined_data_subset)
+joined_data = pd.merge(emissions_data, parent_data, left_on = ['FRS Id'],  right_on = ['FRS ID (FACILITY)'])
+
+# ????????
+# joined_data = pd.merge(emissions_data, parent_data, left_on = ['year', 'FRS Id'],  right_on = ['REPORTING YEAR', 'FRS ID (FACILITY)'])
+
+# print(emissions_data.columns)
+# print(parent_data.columns)
+# print(joined_data.head(10))
+# print(joined_data.columns)
+
+joined_data = joined_data.loc[~pd.isna(joined_data[['Facility Id', 'REPORTING YEAR', 'State where Emissions Occur', 
+                                                    'Industry Type (subparts)', 'Total reported direct emissions from Local Distribution Companies',
+                                                    'PARENT CO. STATE', 'PARENT CO. PERCENT OWNERSHIP']])]
+
+# joined_data = joined_data.loc[
+#     (~pd.isna(joined_data['Facility Id'])) &
+#     (~pd.isna(joined_data['REPORTING YEAR'])) &
+#     (~pd.isna(joined_data['State where Emissions Occur'])) &
+#     (~pd.isna(joined_data['Industry Type (subparts)'])) &
+#     (~pd.isna(joined_data['Total reported direct emissions from Local Distribution Companies'])) &
+#     (~pd.isna(joined_data['PARENT CO. STATE'])) &
+#     (~pd.isna(joined_data['PARENT CO. PERCENT OWNERSHIP']))
+# ]
 
 def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.DataFrame:
     """
