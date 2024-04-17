@@ -80,69 +80,11 @@ def n_null(df: pd.DataFrame, col: str) -> int:
         na_count = data[col].isna().sum()
     return na_count
 
-# print(n_null(df, "FRS ID (FACILITY)"))
+ex_4 = n_null(df, "FRS ID (FACILITY)")
 
 # to be considered: FRS Id good choice to join data? sure
 
 # exercise 4
-
-# joined_data = emissions_data.join(parent_data, how = 'left')
-# joined_data = pd.merge(emissions_data, parent_data, left_on = 'FRS Id', right_on = 'FRS ID (FACILITY)')
-# print(sorted(emissions_data))
-# print(sorted(parent_data))
-# print(joined_data)
-
-# joined_data = emissions_data.join(parent_data, how = 'left')
-
-# how am i supopsed to merge by year and frs id? create new column called year?
-# what is meant by subset? I tried doing it and i end up with the same amount of columns as before I subsetted
-
-# joined_data = pd.merge(emissions_data, parent_data, left_on = ['FRS Id'],  right_on = ['FRS ID (FACILITY)'])
-
-# ????????
-# joined_data = pd.merge(emissions_data, parent_data, left_on = ['year', 'FRS Id'],  right_on = ['REPORTING YEAR', 'FRS ID (FACILITY)'])
-
-# print(emissions_data.columns)
-# print(parent_data.columns)
-# print(joined_data.head(10))
-# print(joined_data.columns)
-
-# joined_data = joined_data.loc[joined_data[['Facility Id', 'REPORTING YEAR', 'State where Emissions Occur', 
-#                                                     'Industry Type (subparts)', 'Total reported direct emissions from Local Distribution Companies',
-#                                                     'PARENT CO. STATE', 'PARENT CO. PERCENT OWNERSHIP']]]
-
-#     raise ValueError("Cannot index with multidimensional key")
-# ValueError: Cannot index with multidimensional key
-
-# joined_data = joined_data.loc[
-#     (~pd.isna(joined_data['Facility Id'])) &
-#     (~pd.isna(joined_data['REPORTING YEAR'])) &
-#     (~pd.isna(joined_data['State where Emissions Occur'])) &
-#     (~pd.isna(joined_data['Industry Type (subparts)'])) &
-#     (~pd.isna(joined_data['Total reported direct emissions from Local Distribution Companies'])) &
-#     (~pd.isna(joined_data['PARENT CO. STATE'])) &
-#     (~pd.isna(joined_data['PARENT CO. PERCENT OWNERSHIP']))
-# ]
-
-# print(joined_data.columns)
-# print(joined_data.head(15))
-
-
-# profs = ['Melissa Knox', 'Yael Jacobs', 'Fahad Khalil']
-# data_subset = data_2023.loc[
-#     data_2023['Instructor'].isin(profs) & 
-#     (data_2023['Course'].str.get(5) == '4')
-# ]
-
-# subset ex. from notes
-
-# subset_names = ['Facility Id', 'year', 'Reported State', 'Industry Type (subsets)', 
-#                 'Total reported direct emissions from Local Distribution Companies', 
-#                 'PARENT CO. STATE', 'PARENT CO. PERCENT OWNERSHIP']
-
-# data_subset = joined_data.loc[
-#     joined_data['']
-# ]
 
 def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.DataFrame:
     """
@@ -151,7 +93,6 @@ def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.Da
     joined_data = pd.merge(emissions_data, parent_data, left_on = ['year', 'FRS Id'],  
                        right_on = ['year', 'FRS ID (FACILITY)'])
     
-
     joined_data = joined_data.loc[
         (~pd.isna(joined_data['Facility Id'])) &
         (~pd.isna(joined_data['REPORTING YEAR'])) &
@@ -171,10 +112,12 @@ def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.Da
 
     return returned_df
 
-# print(clean_data(emissions_data, parent_data))
 df = clean_data(emissions_data, parent_data)
-# group_vars = [state, year...] # can also be blank, meaning take mean over whole df
-# can be any variable. given those variables, take the summary of the ones listed
+print(df['total reported direct emissions from local distribution companies'].describe())
+print(df['parent co. percent ownership'].describe())
+
+# group_vars = [state, year...]
+# given those variables, take the summary of the ones listed
 # in exercise 5 online
 
 # exercise 5
@@ -187,10 +130,16 @@ def aggregate_emissions(df: pd.DataFrame, group_vars: list) -> pd.DataFrame:
     # sort highest to lowest mean total reported direct emissions
     # use df.groupby('blah blah')
 
-    # if group_vars.st
-    #     # look at total reported direct emissions, parent co. percent ownership
-    #     # at the state level
-    #     else:
-        
+    if group_vars['state']:
+        a = b
+        # look at total reported direct emissions, parent co. percent ownership
+        # at the state level
+    elif group_vars['facility id']:
+        b = a
+    elif group_vars['industry type (subparts)']:
+    
+
+    # df['total reported direct emissions from local distribution companies'].describe()
+    # df['parent co. percent ownership'].describe()
 
     return None
