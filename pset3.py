@@ -82,6 +82,8 @@ def n_null(df: pd.DataFrame, col: str) -> int:
         na_count = data[col].isna().sum()
     return na_count
 
+# print(n_null(df, 'FRS ID (FACILITY)'))
+
 # to be considered: FRS Id good choice to join data? perchance
 
 # exercise 4
@@ -111,11 +113,14 @@ def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.Da
 
     return returned_df
 
+# print(clean_data(emissions_data, parent_data).head(5))
+
 df = clean_data(emissions_data, parent_data)
 
 group_vars = ['state where emissions occur']
 
 # exercise 5
+
 def aggregate_emissions(df: pd.DataFrame, group_vars: list) -> pd.DataFrame:
     """
     Passes through df from exercise four and group_vars, a list that specifies
@@ -128,3 +133,5 @@ def aggregate_emissions(df: pd.DataFrame, group_vars: list) -> pd.DataFrame:
     stats = stats.sort_values(by = group_vars, ascending = False)
 
     return stats
+
+# print(aggregate_emissions(df, group_vars).head(5))
