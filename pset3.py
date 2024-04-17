@@ -130,13 +130,17 @@ def aggregate_emissions(df: pd.DataFrame, group_vars: list) -> pd.DataFrame:
     # sort highest to lowest mean total reported direct emissions
     # use df.groupby('blah blah')
 
-    if group_vars['state']:
+    if group_vars['state where emissions occur']:
         a = b
         # look at total reported direct emissions, parent co. percent ownership
         # at the state level
     elif group_vars['facility id']:
         b = a
     elif group_vars['industry type (subparts)']:
+        a = a
+    elif group_vars['years']:
+        aa = aa
+    elif group_vars['']:
     
 
     # df['total reported direct emissions from local distribution companies'].describe()
