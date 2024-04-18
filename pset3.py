@@ -26,7 +26,7 @@ def import_yearly_data(years: list) -> pd.DataFrame:
     dfs = []
     for year in years:
         directory = f'https://lukashager.netlify.app/econ-481/data/ghgp_data_{year}.xlsx'
-        data = pd.read_excel(directory, 'LDC - Direct Emissions', skiprows = 3).assign(year = year)
+        data = pd.read_excel(directory, 'Direct Emitters', skiprows = 3).assign(year = year)
         dfs.append(data)
         data_output = pd.concat(dfs, ignore_index = True)
     return data_output
@@ -98,26 +98,26 @@ def clean_data(emissions_data: pd.DataFrame, parent_data: pd.DataFrame) -> pd.Da
                        right_on = ['year', 'FRS ID (FACILITY)'])
     joined_data = joined_data.loc[
         (~pd.isna(joined_data['Facility Id'])) &
-        (~pd.isna(joined_data['REPORTING YEAR'])) &
-        (~pd.isna(joined_data['State where Emissions Occur'])) &
-        (~pd.isna(joined_data['Industry Type (subparts)'])) &
-        (~pd.isna(joined_data['Total reported direct emissions from Local Distribution Companies'])) &
+        (~pd.isna(joined_data['year'])) &
+        (~pd.isna(joined_data['State'])) &
+        (~pd.isna(joined_data['Industry Type (sectors)'])) &
+        (~pd.isna(joined_data['Total reported direct emissions'])) &
         (~pd.isna(joined_data['PARENT CO. STATE'])) &
         (~pd.isna(joined_data['PARENT CO. PERCENT OWNERSHIP']))
     ]
-    returned_df = joined_data[['Facility Id', 'year', 'State where Emissions Occur',
-                                'Industry Type (subparts)',
-                                'Total reported direct emissions from Local Distribution Companies',
+    returned_df = joined_data[['Facility Id', 'year', 'State',
+                                'Industry Type (sectors)',
+                                'Total reported direct emissions',
                                 'PARENT CO. STATE', 'PARENT CO. PERCENT OWNERSHIP']]
     returned_df.columns = returned_df.columns.str.lower()
 
     return returned_df
 
-# print(clean_data(emissions_data, parent_data).head(5))
-
 df = clean_data(emissions_data, parent_data)
 
-group_vars = ['state where emissions occur']
+# print(df)
+
+group_vars = ['state', 'year']
 
 # exercise 5
 
