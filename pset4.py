@@ -26,15 +26,36 @@ def load_data() -> pd.DataFrame:
 df = load_data()
 
 # exercise 2
+# Please write a function called plot_close which takes the output of load_data() as defined above, as well as an optional start and end date 
+# (strings formatted as ‘YYYY-MM-DD’) and plots the closing price of the stock between those dates as a line graph. 
+# Please include the date range in the title of the graph. Note that this function needn’t return anything, just plot a graph using matplotlib
 
 import matplotlib.pyplot as plt
+
+# print(df)
+
+start = '2010-06-29'
+end = '2024-04-15'
+data = df.reset_index()
+start_date = list(df['Date'])
+close_price = list(df['Close'])
+
+plt.plot(start_date, close_price)
+
+
 
 def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-15') -> None:
     """
     Some docstrings
     """
-    fig = plt.figure()
-    ax = fig.add_subplot()
+    start = '2010-06-29'
+    end = '2024-04-15'
+    data = df.reset_index()
+    start_date = list(df['Date'])
+    close_price = list(df['Close'])
 
-    # ax.plot(df, color = "black",
-    #         linestyle = "dashed", marker = "o")
+    closed_plot = plt.plot(start_date, close_price)
+    
+    return closed_plot
+
+print(plot_close(df, '2010-06-29', '2024-04-15'))
