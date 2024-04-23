@@ -20,14 +20,15 @@ def load_data() -> pd.DataFrame:
     """
     directory = f'https://lukashager.netlify.app/econ-481/data/TSLA.csv'
     data = pd.read_csv(directory,
-                    #    index_col = 0,
+                       index_col = 0,
                        parse_dates = True)
 
     return data
 
 df = load_data()
+print(df)
 
-print(list(df.columns))
+# print(list(df.columns))
 
 # exercise 2
 # Please write a function called plot_close which takes the output of load_data() as defined above, as well as an optional start and end date 
@@ -37,17 +38,12 @@ print(list(df.columns))
 import matplotlib.pyplot as plt
 # df.columns()
 
-# fig = plt.figure()
-# ax = fig.add_subplot()
-# graph = ax.plot(df['Close'], color = 'black',
-#                 linestyle = 'dashed', marker = 'o')
-
-# dates = df['Date']
-# closing = df['Close']
-# plt.plot(dates, closing)
-
-
-# plt.show()
+fig = plt.figure()
+ax = fig.add_subplot()
+# ax.set_xlim('2010-06-29', '2024-04-15')
+closing = df['Close']
+ax.plot(closing)
+plt.show()
 
 def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-15') -> None:
     """
@@ -58,8 +54,9 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
     fig = plt.figure()
     ax = fig.add_subplot()
     graph = ax.plot(df['Close'], color = 'black',
-                    linestyle = '-', marker = '.')
-
+                    linestyle = '-', marker = 'o')
+    ax.set_xlim(start, end)
+    ax.set_ylim()
     dates = df['Date']
     closing = df['Close']
     plt.plot(dates, closing)
@@ -68,3 +65,5 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
     return showing
 
 # print(plot_close(df, '2010-06-29', '2024-04-15'))
+
+# exercise 3
