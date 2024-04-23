@@ -10,7 +10,7 @@ def github() -> str:
 
     return "https://github.com/henryswerve/481/blob/main/pset4.py"
 
-# exercise 1
+# exercise 1 ok
 
 import pandas as pd
 
@@ -21,49 +21,49 @@ def load_data() -> pd.DataFrame:
     directory = f'https://lukashager.netlify.app/econ-481/data/TSLA.csv'
     data = pd.read_csv(directory,
                        index_col = 0,
-                       parse_dates = True)
-
+                       parse_dates = ['Date'])
     return data
 
 df = load_data()
-print(df)
-
-# print(list(df.columns))
-
-# exercise 2
-# Please write a function called plot_close which takes the output of load_data() as defined above, as well as an optional start and end date 
-# (strings formatted as ‘YYYY-MM-DD’) and plots the closing price of the stock between those dates as a line graph. 
-# Please include the date range in the title of the graph. Note that this function needn’t return anything, just plot a graph using matplotlib
+# exercise 2 ok
 
 import matplotlib.pyplot as plt
-# df.columns()
-
-fig = plt.figure()
-ax = fig.add_subplot()
-# ax.set_xlim('2010-06-29', '2024-04-15')
-closing = df['Close']
-ax.plot(closing)
-plt.show()
 
 def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-15') -> None:
     """
     Some docstrings
     """
     
-    df = df.loc[(df['Date'] >= start) & (df['Date'] <= end)]
+    start = pd.to_datetime([start])
+    end = pd.to_datetime([end])
     fig = plt.figure()
     ax = fig.add_subplot()
-    graph = ax.plot(df['Close'], color = 'black',
+    graph = ax.plot(df['Close'], color = 'blue',
                     linestyle = '-', marker = 'o')
     ax.set_xlim(start, end)
-    ax.set_ylim()
-    dates = df['Date']
     closing = df['Close']
-    plt.plot(dates, closing)
+    plt.plot(closing)
+    plt.show()
 
-    showing = plt.show()
-    return showing
+    return None
 
 # print(plot_close(df, '2010-06-29', '2024-04-15'))
 
 # exercise 3
+
+import statsmodels.api as sm
+
+# need to make sure dates are consecutive
+df['Date'] = pd.to_datetime(df['Date'])
+reg = sm.OLS(df['Close'], df['Date'])
+results = reg.fit()
+results.params
+
+def autoregress(df: pd.DataFrame) -> float:
+    """
+    Some docstrings.
+    """
+
+    reg = sm.OLS(df['Close'], df['Date'])
+    tstat = 3
+    return None
