@@ -22,11 +22,12 @@ def load_data() -> pd.DataFrame:
     data = pd.read_csv(directory,
                        index_col = 0,
                        parse_dates = ['Date'])
+    data.reset_index(inplace = True)
     return data
 
 df = load_data()
+print(df.columns)
 # exercise 2 ok
-
 import matplotlib.pyplot as plt
 
 def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-15') -> None:
@@ -47,6 +48,8 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
 
     return None
 
+# adding the index (inplace = True) shifts my graph to the 70s... removing it doesn't brnigs it back to normal
+# however, i think i need it for problem 3 when im shifting??
 # print(plot_close(df, '2010-06-29', '2024-04-15'))
 
 # exercise 3
@@ -54,10 +57,19 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
 import statsmodels.api as sm
 
 # need to make sure dates are consecutive
-df['Date'] = pd.to_datetime(df['Date'])
-reg = sm.OLS(df['Close'], df['Date'])
-results = reg.fit()
-results.params
+
+# df['Date'] = pd.to_datetime(df['Date'])
+df['Date'] = df['Date'].shift(periods = 0, freq = 'infer')
+
+
+print(df)
+
+
+# reg = sm.OLS(df['Close'], df['Date'])
+# results = reg.fit()
+# results.params
+
+# if previous date - current date > 1, fill row with next date until 
 
 def autoregress(df: pd.DataFrame) -> float:
     """
