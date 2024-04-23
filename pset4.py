@@ -26,7 +26,7 @@ def load_data() -> pd.DataFrame:
     return data
 
 df = load_data()
-print(df.columns)
+# print(df.columns)
 # exercise 2 ok
 import matplotlib.pyplot as plt
 
@@ -47,8 +47,7 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
     plt.show()
 
     return None
-
-# adding the index (inplace = True) shifts my graph to the 70s... removing it doesn't brnigs it back to normal
+# adding the index (data.reset_index(inplace = True)) shifts my graph to the 70s... removing it doesn't bring it back to normal
 # however, i think i need it for problem 3 when im shifting??
 # print(plot_close(df, '2010-06-29', '2024-04-15'))
 
@@ -57,19 +56,22 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
 import statsmodels.api as sm
 
 # need to make sure dates are consecutive
-
+# print(df)
+# print(type(df['Date']))
 # df['Date'] = pd.to_datetime(df['Date'])
-df['Date'] = df['Date'].shift(periods = 0, freq = 'infer')
+
+# df['Date'] = df['Date'].shift(periods = 3, freq = 'D')
+# ???/
 
 
-print(df)
+# print(df)
 
 
 # reg = sm.OLS(df['Close'], df['Date'])
 # results = reg.fit()
 # results.params
 
-# if previous date - current date > 1, fill row with next date until 
+# if previous date - current date > 1, fill row with dates in between until next date is reached
 
 def autoregress(df: pd.DataFrame) -> float:
     """
