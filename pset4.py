@@ -101,33 +101,45 @@ def autoregress(df: pd.DataFrame) -> float:
 
 # exercise 4
 
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
+import numpy as np
 
 
-# this throws error idk what to do im stressed
 
 newdf = df.shift(periods = 1, freq = 'D')
 newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
 newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
 newdf['lag_delta'] = newdf['delta'].shift(1, fill_value = 0)
+newdf['logistic'] = newdf['delta'] - newdf['lag_delta']
 
-pipe = Pipeline(
-	[
-		('import_median', SimpleImputer(strategy = 'median')),
-		# for every missing value, impute a median value in that place
-		('logit', LogisticRegression())
-		# after doing that, run a logistic regression on that data
-	]
-)
+newdf['bool'] = (newdf['logistic'] > 0).astype(int)
+# print(newdf.head(15))
 
-exogenous = pd.DataFrame(newdf['delta']).astype(int)
-endogenous = pd.DataFrame(newdf['lag_delta']).astype(int)
-pipe.fit(exogenous, endogenous)
 
-Pipeline(steps=[('impute_median', SimpleImputer(strategy='median')),
-                ('logit', LogisticRegression())])
+# print(newdf.head(5))
+
+model = LogisticRegression()
+
+# print(list(newdf.columns))
+
+# exogenous = pd.DataFrame(newdf['logistic'])
+# exogenous = exogenous.flatten()
+# endogenous = pd.DataFrame(newdf['bool'])
+
+# below works for scikit learn... not statsmodels
+# exogenous = np.array(newdf['logistic'])
+# exogenous = exogenous.reshape(-1, 1)
+# endogenous = np.array(newdf['bool'])
+# print(exogenous.shape)
+# print(endogenous.shape)
+
+# log_reg = model.fit(exogenous, endogenous)
+
+
+endogenous = newdf['logistic'].reshape(-1, 1)
+reg = sm.Logit(newdf['logistic'], newdf['bool'])
+results = reg.fit(use_t = True)
+t_stat = results.tvalues
 
 # reg = sm.Logit('delta ~ lag_delta', data = newdf)
 # reg = sm.Logit(newdf['delta'], newdf['lag_delta'])
