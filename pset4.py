@@ -63,21 +63,23 @@ import statsmodels.api as sm
 
 # ???
 # print(df.head(10))
-newdf = df.shift(periods = 1, freq = 'D')
+# newdf = df.shift(periods = 1, freq = 'D')
 
 # create lag_price column lagging 'Close' by 1 done
 # take the difference between lag_price and 'Close'. create that as a new column called diff
 # lag that column and regress diff on that column
 
-newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
-newdf['delta'] = (newdf['lag_price'] - newdf['Close'])
-print(newdf.head(15))
-# newdf['lag_price_diff'] = newdf['lag_price'].shift(1, fill_value = 0)
-# newdf['lag_diff'] = newdf['lag_price_diff'].shift(1, fill_value = 0)
+# newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
+# newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
+# newdf['lag_delta'] = newdf['delta'].shift(1, fill_value = 0)
 # print(newdf.head(15))
-# reg = sm.OLS(newdf['lag_price_diff'], newdf['lag_diff']) # need x array which is
-# results = reg.fit()
-# print(results.summary)
+
+# reg = sm.OLS(newdf['delta'], newdf['lag_delta'])
+# results = reg.fit(cov_type = 'HC1', use_t = True)
+# results_summary = results.summary()
+# t_stat = results.tvalues
+# print(results_summary)
+# print(t_stat)
 
 # if previous date - current date > 1, fill row with dates in between until next date is reached
 
@@ -85,7 +87,68 @@ def autoregress(df: pd.DataFrame) -> float:
     """
     Some docstrings.
     """
+    newdf = df.shift(periods = 1, freq = 'D')
+    newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
+    newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
+    newdf['lag_delta'] = newdf['delta'].shift(1, fill_value = 0)
 
-    reg = sm.OLS(df['Close'], df['Date'])
-    tstat = 3
-    return None
+    reg = sm.OLS(newdf['delta'], newdf['lag_delta'])
+    results = reg.fit(cov_type = 'HC1', use_t = True)
+    t_stat = results.tvalues
+    return t_stat
+
+# print(autoregress(df))
+
+# exercise 4
+
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+
+newdf = df.shift(periods = 1, freq = 'D')
+newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
+newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
+newdf['lag_delta'] = newdf['delta'].shift(1, fill_value = 0)
+
+pipe = Pipeline(
+	[
+		('import_median', SimpleImputer(strategy = 'median')),
+		# for every missing value, impute a median value in that place
+		('logit', LogisticRegression())
+		# after doing that, run a logistic regression on that data
+	]
+)
+
+exogenous = pd.DataFrame(newdf['delta']).astype(int)
+endogenous = pd.DataFrame(newdf['lag_delta']).astype(int)
+pipe.fit(exogenous, endogenous)
+
+Pipeline(steps=[('impute_median', SimpleImputer(strategy='median')),
+                ('logit', LogisticRegression())])
+
+# reg = sm.Logit('delta ~ lag_delta', data = newdf)
+# reg = sm.Logit(newdf['delta'], newdf['lag_delta'])
+# results = reg.fit(use_t = True)
+# t_stat = results.tvalues
+
+    # return t_stat
+
+def autoregress_logit(df: pd.DataFrame) -> float:
+    """
+    Some docstrings.
+    """
+    newdf = df.shift(periods = 1, freq = 'D')
+    newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
+    newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
+    newdf['lag_delta'] = newdf['delta'].shift(1, fill_value = 0)
+
+    endogenous = pd.array(newdf['lag_delta'])
+
+    # reg = sm.Logit('delta ~ lag_delta', data = newdf)
+    reg = sm.Logit(newdf['delta'], newdf['lag_delta'])
+    results = reg.fit(use_t = True)
+    t_stat = results.tvalues
+
+    return t_stat
+
+# print(autoregress_logit(df))
