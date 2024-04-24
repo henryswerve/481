@@ -105,6 +105,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 
+
+# this throws error idk what to do im stressed
+
 newdf = df.shift(periods = 1, freq = 'D')
 newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
 newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
@@ -133,6 +136,8 @@ Pipeline(steps=[('impute_median', SimpleImputer(strategy='median')),
 
     # return t_stat
 
+
+# func throws error
 def autoregress_logit(df: pd.DataFrame) -> float:
     """
     Some docstrings.
