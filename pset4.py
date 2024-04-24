@@ -22,11 +22,11 @@ def load_data() -> pd.DataFrame:
     data = pd.read_csv(directory,
                        index_col = 0,
                        parse_dates = ['Date'])
-    data.reset_index(inplace = True)
+    # data.reset_index(inplace = True) plot is correct without this as code
     return data
 
 df = load_data()
-# print(df.columns)
+# print(df)
 # exercise 2 ok
 import matplotlib.pyplot as plt
 
@@ -43,7 +43,6 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
                     linestyle = '-', marker = 'o')
     ax.set_xlim(start, end)
     closing = df['Close']
-    plt.plot(closing)
     plt.show()
 
     return None
@@ -61,15 +60,24 @@ import statsmodels.api as sm
 # df['Date'] = pd.to_datetime(df['Date'])
 
 # df['Date'] = df['Date'].shift(periods = 3, freq = 'D')
-# ???/
 
+# ???
+# print(df.head(10))
+newdf = df.shift(periods = 1, freq = 'D')
 
-# print(df)
+# create lag_price column lagging 'Close' by 1 done
+# take the difference between lag_price and 'Close'. create that as a new column called diff
+# lag that column and regress diff on that column
 
-
-# reg = sm.OLS(df['Close'], df['Date'])
+newdf['lag_price'] = newdf['Close'].shift(1, fill_value = 0)
+newdf['delta'] = (newdf['lag_price'] - newdf['Close'])
+print(newdf.head(15))
+# newdf['lag_price_diff'] = newdf['lag_price'].shift(1, fill_value = 0)
+# newdf['lag_diff'] = newdf['lag_price_diff'].shift(1, fill_value = 0)
+# print(newdf.head(15))
+# reg = sm.OLS(newdf['lag_price_diff'], newdf['lag_diff']) # need x array which is
 # results = reg.fit()
-# results.params
+# print(results.summary)
 
 # if previous date - current date > 1, fill row with dates in between until next date is reached
 
