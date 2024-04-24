@@ -3,6 +3,7 @@
 # Econ 481
 
 # exercise 0 
+
 def github() -> str:
     """
     Some docstrings.
