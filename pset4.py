@@ -29,8 +29,6 @@ def load_data() -> pd.DataFrame:
 
 df = load_data()
 
-# print(df)
-
 # exercise 2
 
 import matplotlib.pyplot as plt
@@ -41,15 +39,28 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
     from the problem above. It takes in string values that denotes 
     the start and end dates for the plot.
     """
+    # converts start and end strings to datetime objects
     start = pd.to_datetime([start])
     end = pd.to_datetime([end])
+    
+    # create plotting environment
     fig = plt.figure()
     ax = fig.add_subplot()
+
+    # create the plot
     graph = ax.plot(df['Close'], color = 'green',
                     linestyle = '-', ms = 0.25,
                     linewidth = 1, marker = 'o')
+    
+    # sets window
     ax.set_xlim(start, end)
+    
+    #set x and y axis labels and title
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Price")
     ax.set_title("Tesla Stock Prices 2010-2024")
+
+    # plot the plot
     plt.show()
 
     return None
@@ -57,34 +68,6 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
 # print(plot_close(df, '2010-06-29', '2024-04-15'))
 
 # exercise 3
-import statsmodels.api as sm
-
-# newdf = df.shift(periods = 1, freq = 'D')
-# df['lag_price'] = df['Close'].shift(1, freq = 'D')
-
-# df['day_diff'] = df.index.to_series().diff().dt.days
-# df = df[df['day_diff'] == 1.0]
-
-# df['delta'] = (df['Close'] - df['lag_price'])
-# df['lag_delta'] = df['delta'].shift(1, freq = "D")
-
-# # print(newdf)
-# reg = sm.OLS(df['delta'], df['lag_delta'], missing = 'drop')
-# results = reg.fit(cov_type = 'HC1', use_t = True)
-# t_stat = results.tvalues
-# print(t_stat)
-
-# logit
-# newdf['bool'] = (newdf['lag_price'] > 0).astype(int)
-# reg = sm.Logit(newdf['bool'], newdf['lag_price'], missing = 'drop')
-# results = reg.fit(method = 'bfgs', use_t = True)
-# t_stat = results.tvalues
-# print(t_stat)
-
-
-
-
-# print(results.summary())
 
 import statsmodels.api as sm
 
@@ -96,100 +79,64 @@ def autoregress(df: pd.DataFrame) -> float:
     'delta' on 'lag_delta' using OLS and returns the t stat for beta 0 hat.
     """
 
-    df['lag_price'] = df['Close'].shift(1, freq = "D")
+    # shift 'Close' and creates shifted close column
+    df['lag_price'] = df['Close'].shift(1)
 
-    df['day_diff'] = df.index.to_series().diff().dt.days
-    df = df[df['day_diff'] == 1.0]
-
+    # takes difference between close and lagged price
     df['delta'] = (df['Close'] - df['lag_price'])
-    df['lag_delta'] = df['delta'].shift(1, freq = "D")
 
-    # print(newdf)
+    # shifts the difference column and creates new column
+    df['lag_delta'] = df['delta'].shift(1)
+
+    # takes OLS reg of delta on lag_delta, omitting NAs
     reg = sm.OLS(df['delta'], df['lag_delta'], missing = 'drop')
+
+    # fit the reg and assign it to results
     results = reg.fit(cov_type = 'HC1', use_t = True)
+
+    # get our t stat
     t_stat = results.tvalues
-    # print(t_stat)
 
     return t_stat
-
-print(autoregress(df))
-
-# def autoregress(df: pd.DataFrame) -> float:
-#     """
-#     Shifts 'Close' and creates new column called 'lag_price'. Creates new
-#     column called delta, taking the difference between 'Close' and 'lag_price'.
-#     It then lags delta and creates new column called 'lag_delta', regresses
-#     'delta' on 'lag_delta' using OLS and returns the t stat for beta 0 hat.
-#     """
-#     newdf = df.shift(periods = 1, freq = 'D')
-#     newdf['lag_price'] = newdf['Close'].shift(1)
-#     newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
-#     newdf['lag_delta'] = newdf['delta'].shift(1)
-#     reg = sm.OLS(newdf['delta'], newdf['lag_delta'], missing = 'drop')
-#     results = reg.fit(cov_type = 'HC1', use_t = True)
-#     t_stat = results.tvalues
-
-#     return t_stat
 
 # print(autoregress(df))
 
 # exercise 4
 
-# from sklearn.linear_model import LogisticRegression
-
-df['lag_price'] = df['Close'].shift(1)
-df['day_diff'] = df.index.to_series().diff().dt.days
-df = df[df['day_diff'] == 1.0]
-
-df['delta'] = (df['Close'] - df['lag_price'])
-df['lag_delta'] = df['delta'].shift(1)
-
-df['bool'] = (df['lag_price'] > 0).astype(int)
-reg = sm.Logit(df['bool'], df['lag_price'], missing = 'drop')
-results = reg.fit(method = 'bfgs', use_t = True)
-t_stat = results.tvalues
-print(t_stat)
-
-    # return t_stat
-
-
 def autoregress_logit(df: pd.DataFrame) -> float:
     """
-    Some docstrings.
+    Shifts 'Close' and creates new column called 'lag_price'. Creates new
+    column called delta, taking the difference between 'Close' and 'lag_price'.
+    Create new column called bool that assigns 1 if row value in delta column > 0,
+    else 1 for that column. It then lags delta and creates 
+    new column called 'lag_delta', regresses 'bool' on 'lag_delta' 
+    using logit reg. and returns the t stat for beta 0 hat.
     """
-    df['Date'] = df.index.to_series()
-    df['Date'] = pd.to_datetime(df['Date'])
-    df['lag_price'] = df['Close'].shift(1)
-    df['day_diff'] = df.index.to_series().diff().dt.days
-    df = df[df['day_diff'] == 1.0]
 
+    # shift 'Close' and creates shifted close column
+    df['lag_price'] = df['Close'].shift(1)
+
+    # takes difference between close and lagged price
     df['delta'] = (df['Close'] - df['lag_price'])
+
+    # shifts the difference column and creates new column
     df['lag_delta'] = df['delta'].shift(1)
 
-    df['bool'] = (df['lag_price'] > 0).astype(int)
-    reg = sm.Logit(df['bool'], df['lag_price'], missing = 'drop')
-    results = reg.fit(method = "bfgs", use_t = True)
-    t_stat = results.tvalues
-    # print(t_stat)
+    # assigns 1 if row value in delta column > 0, else 1 for new bool column
+    df['bool'] = (df['delta'] > 0).astype(int)
 
+    # takes logit reg of bool on lag_delta, omitting NAs
+    reg = sm.Logit(df['bool'], df['lag_delta'], missing = 'drop')
+
+    # fit logit model
+    results = reg.fit(use_t = True)
+
+    # obtain our t stat
+    t_stat = results.tvalues
+    
     return t_stat
 
 # print(autoregress_logit(df))
-
-# def autoregress_logit(df: pd.DataFrame) -> float:
-#     """
-#     Some docstrings.
-#     """
-#     newdf = df.shift(periods = 1, freq = 'D')
-#     newdf['lag_price'] = newdf['Close'].shift(1)
-#     newdf['bool'] = (newdf['lag_price'] > 0).astype(int)
-#     reg = sm.Logit(newdf['bool'], newdf['lag_price'], missing = 'drop')
-#     results = reg.fit(method = 'bfgs', use_t = True)
-#     t_stat = results.tvalues
-
-#     return t_stat
-
-# print(autoregress_logit(df))  
 
 # exercise 5
 
@@ -202,19 +149,26 @@ def plot_delta(df: pd.DataFrame) -> None:
     difference between 'Close' and 'lag_price'. 
     It then plots 'delta' in blue.
     """
-    start = '2010-06-29'
-    end = '2024-04-15'
-    start = pd.to_datetime([start])
-    end = pd.to_datetime([end])
+
+    # shifts close column
     df['lag_price'] = df['Close'].shift(1, freq = "D")
+
+    # take difference and creates delta column
     df['delta'] = (df['Close'] - df['lag_price'])
+
+    # set up plotting environment
     fig = plt.figure()
     ax = fig.add_subplot()
     ax.plot(df['delta'], color = 'blue',
             linestyle = '-', ms = 0.25,
             linewidth = 1, marker = 'o')
-    ax.set_xlim(start, end)
-    ax.set_title("Tesla Stock Prices Delta 2010-2024")
+    
+    # set up x, y and title labels
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Price Change")
+    ax.set_title("Tesla Stock Price Changes: 2010-2024")
+    
+    # plot the plot
     plt.show()
     
     return None
