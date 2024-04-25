@@ -22,8 +22,8 @@ def load_data() -> pd.DataFrame:
     """
     directory = f'https://lukashager.netlify.app/econ-481/data/TSLA.csv'
     data = pd.read_csv(directory,
-                       index_col = 0,
-                       parse_dates = ['Date'])
+                        index_col = 0,
+                        parse_dates = ['Date'])
     
     return data
 
@@ -57,6 +57,35 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
 # print(plot_close(df, '2010-06-29', '2024-04-15'))
 
 # exercise 3
+import statsmodels.api as sm
+
+# newdf = df.shift(periods = 1, freq = 'D')
+newdf = df
+newdf['lag_price'] = newdf['Close'].shift(1)
+
+newdf['day_diff'] = newdf.index.to_series().diff().dt.days
+newdf = newdf[newdf['day_diff'] == 1.0]
+
+newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
+newdf['lag_delta'] = newdf['delta'].shift(1)
+
+# print(newdf)
+reg = sm.OLS(newdf['delta'], newdf['lag_delta'], missing = 'drop')
+results = reg.fit(cov_type = 'HC1', use_t = True)
+t_stat = results.tvalues
+print(t_stat)
+
+# logit
+# newdf['bool'] = (newdf['lag_price'] > 0).astype(int)
+# reg = sm.Logit(newdf['bool'], newdf['lag_price'], missing = 'drop')
+# results = reg.fit(method = 'bfgs', use_t = True)
+# t_stat = results.tvalues
+# print(t_stat)
+
+
+
+
+# print(results.summary())
 
 import statsmodels.api as sm
 
@@ -67,34 +96,85 @@ def autoregress(df: pd.DataFrame) -> float:
     It then lags delta and creates new column called 'lag_delta', regresses
     'delta' on 'lag_delta' using OLS and returns the t stat for beta 0 hat.
     """
+
     newdf = df.shift(periods = 1, freq = 'D')
     newdf['lag_price'] = newdf['Close'].shift(1)
+
+    newdf['day_diff'] = newdf.index.to_series().diff().dt.days
+    newdf = newdf[newdf['day_diff'] == 1.0]
+
     newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
     newdf['lag_delta'] = newdf['delta'].shift(1)
+
+    # print(newdf)
     reg = sm.OLS(newdf['delta'], newdf['lag_delta'], missing = 'drop')
     results = reg.fit(cov_type = 'HC1', use_t = True)
     t_stat = results.tvalues
+    # print(t_stat)
 
     return t_stat
 
 # print(autoregress(df))
 
+# def autoregress(df: pd.DataFrame) -> float:
+#     """
+#     Shifts 'Close' and creates new column called 'lag_price'. Creates new
+#     column called delta, taking the difference between 'Close' and 'lag_price'.
+#     It then lags delta and creates new column called 'lag_delta', regresses
+#     'delta' on 'lag_delta' using OLS and returns the t stat for beta 0 hat.
+#     """
+#     newdf = df.shift(periods = 1, freq = 'D')
+#     newdf['lag_price'] = newdf['Close'].shift(1)
+#     newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
+#     newdf['lag_delta'] = newdf['delta'].shift(1)
+#     reg = sm.OLS(newdf['delta'], newdf['lag_delta'], missing = 'drop')
+#     results = reg.fit(cov_type = 'HC1', use_t = True)
+#     t_stat = results.tvalues
+
+#     return t_stat
+
+# print(autoregress(df))
+
 # exercise 4
 
-from sklearn.linear_model import LogisticRegression
+# from sklearn.linear_model import LogisticRegression
+
 
 def autoregress_logit(df: pd.DataFrame) -> float:
     """
     Some docstrings.
     """
-    newdf = df.shift(periods = 1, freq = 'D')
+    newdf = df
     newdf['lag_price'] = newdf['Close'].shift(1)
+
+    newdf['day_diff'] = newdf.index.to_series().diff().dt.days
+    newdf = newdf[newdf['day_diff'] == 1.0]
+
+    newdf['delta'] = (newdf['Close'] - newdf['lag_price'])
+    newdf['lag_delta'] = newdf['delta'].shift(1)
+
     newdf['bool'] = (newdf['lag_price'] > 0).astype(int)
     reg = sm.Logit(newdf['bool'], newdf['lag_price'], missing = 'drop')
     results = reg.fit(method = 'bfgs', use_t = True)
     t_stat = results.tvalues
+    # print(t_stat)
 
     return t_stat
+
+# print(autoregress_logit(df))
+
+# def autoregress_logit(df: pd.DataFrame) -> float:
+#     """
+#     Some docstrings.
+#     """
+#     newdf = df.shift(periods = 1, freq = 'D')
+#     newdf['lag_price'] = newdf['Close'].shift(1)
+#     newdf['bool'] = (newdf['lag_price'] > 0).astype(int)
+#     reg = sm.Logit(newdf['bool'], newdf['lag_price'], missing = 'drop')
+#     results = reg.fit(method = 'bfgs', use_t = True)
+#     t_stat = results.tvalues
+
+#     return t_stat
 
 # print(autoregress_logit(df))  
 
