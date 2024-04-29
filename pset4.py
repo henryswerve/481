@@ -50,17 +50,12 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
     the start and end dates for the plot.
     """
     # converts start and end strings to datetime objects
-    # converts start and end strings to datetime objects
     start = pd.to_datetime([start])
     end = pd.to_datetime([end])
     
     # create plotting environment
-    
-    # create plotting environment
     fig = plt.figure()
     ax = fig.add_subplot()
-
-    # create the plot
 
     # create the plot
     graph = ax.plot(df['Close'], color = 'green',
@@ -68,20 +63,12 @@ def plot_close(df: pd.DataFrame, start: str = '2010-06-29', end: str = '2024-04-
                     linewidth = 1, marker = 'o')
     
     # sets window
-    
-    # sets window
     ax.set_xlim(start, end)
     
     #set x and y axis labels and title
     ax.set_xlabel("Year")
     ax.set_ylabel("Price")
-    
-    #set x and y axis labels and title
-    ax.set_xlabel("Year")
-    ax.set_ylabel("Price")
     ax.set_title("Tesla Stock Prices 2010-2024")
-
-    # plot the plot
 
     # plot the plot
     plt.show()
@@ -117,15 +104,10 @@ def autoregress(df: pd.DataFrame) -> float:
     df['lag_delta'] = df['delta'].shift(1)
 
     # takes OLS reg of delta on lag_delta, omitting NAs
-    # takes OLS reg of delta on lag_delta, omitting NAs
     reg = sm.OLS(df['delta'], df['lag_delta'], missing = 'drop')
 
     # fit the reg and assign it to results
-
-    # fit the reg and assign it to results
     results = reg.fit(cov_type = 'HC1', use_t = True)
-
-    # get our t stat
 
     # get our t stat
     t_stat = results.tvalues
@@ -147,25 +129,13 @@ def autoregress_logit(df: pd.DataFrame) -> float:
     """
 
     # shift 'Close' and creates shifted close column
-    Shifts 'Close' and creates new column called 'lag_price'. Creates new
-    column called delta, taking the difference between 'Close' and 'lag_price'.
-    Create new column called bool that assigns 1 if row value in delta column > 0,
-    else 1 for that column. It then lags delta and creates 
-    new column called 'lag_delta', regresses 'bool' on 'lag_delta' 
-    using logit reg. and returns the t stat for beta 0 hat.
-    """
-
-    # shift 'Close' and creates shifted close column
     df['lag_price'] = df['Close'].shift(1)
 
     # df['day_diff'] = df.index.to_series().diff().dt.days
     # df = df[df['day_diff'] == 1.0]
 
     # takes difference between close and lagged price
-    # takes difference between close and lagged price
     df['delta'] = (df['Close'] - df['lag_price'])
-
-    # shifts the difference column and creates new column
 
     # shifts the difference column and creates new column
     df['lag_delta'] = df['delta'].shift(1)
@@ -180,18 +150,7 @@ def autoregress_logit(df: pd.DataFrame) -> float:
     results = reg.fit(use_t = True)
 
     # obtain our t stat
-    # assigns 1 if row value in delta column > 0, else 1 for new bool column
-    df['bool'] = (df['delta'] > 0).astype(int)
-
-    # takes logit reg of bool on lag_delta, omitting NAs
-    reg = sm.Logit(df['bool'], df['lag_delta'], missing = 'drop')
-
-    # fit logit model
-    results = reg.fit(use_t = True)
-
-    # obtain our t stat
     t_stat = results.tvalues
-    
     
     return t_stat
 
@@ -210,16 +169,10 @@ def plot_delta(df: pd.DataFrame) -> None:
     """
 
     # shifts close column
-
-    # shifts close column
     df['lag_price'] = df['Close'].shift(1, freq = "D")
 
     # take difference and creates delta column
-
-    # take difference and creates delta column
     df['delta'] = (df['Close'] - df['lag_price'])
-
-    # set up plotting environment
 
     # set up plotting environment
     fig = plt.figure()
@@ -227,13 +180,6 @@ def plot_delta(df: pd.DataFrame) -> None:
     ax.plot(df['delta'], color = 'blue',
             linestyle = '-', ms = 0.25,
             linewidth = 1, marker = 'o')
-    
-    # set up x, y and title labels
-    ax.set_xlabel("Year")
-    ax.set_ylabel("Price Change")
-    ax.set_title("Tesla Stock Price Changes: 2010-2024")
-    
-    # plot the plot
     
     # set up x, y and title labels
     ax.set_xlabel("Year")
