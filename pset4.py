@@ -2,6 +2,16 @@
 # Pset 4
 # Econ 481
 
+
+###
+# I included commented out lines that would fulfill the idea of consecutive days,
+# only including days that are literally a day apart from each other rather than
+# just consecutive business days. I was just confused about which defintion of
+# consecutive is, and so I chose the method that the majority of my classmates chose.
+###
+
+
+
 # exercise 0 
 
 def github() -> str:
@@ -82,8 +92,13 @@ def autoregress(df: pd.DataFrame) -> float:
     # shift 'Close' and creates shifted close column
     df['lag_price'] = df['Close'].shift(1)
 
+
+    # df['day_diff'] = df.index.to_series().diff().dt.days
+    # df = df[df['day_diff'] == 1.0]
+
     # takes difference between close and lagged price
     df['delta'] = (df['Close'] - df['lag_price'])
+
 
     # shifts the difference column and creates new column
     df['lag_delta'] = df['delta'].shift(1)
@@ -99,7 +114,7 @@ def autoregress(df: pd.DataFrame) -> float:
 
     return t_stat
 
-# print(autoregress(df))
+print(autoregress(df))
 
 # exercise 4
 
@@ -115,6 +130,9 @@ def autoregress_logit(df: pd.DataFrame) -> float:
 
     # shift 'Close' and creates shifted close column
     df['lag_price'] = df['Close'].shift(1)
+
+    # df['day_diff'] = df.index.to_series().diff().dt.days
+    # df = df[df['day_diff'] == 1.0]
 
     # takes difference between close and lagged price
     df['delta'] = (df['Close'] - df['lag_price'])
@@ -136,7 +154,7 @@ def autoregress_logit(df: pd.DataFrame) -> float:
     
     return t_stat
 
-# print(autoregress_logit(df))
+print(autoregress_logit(df))
 
 # exercise 5
 
