@@ -54,25 +54,36 @@ for url in tobe_urls:
 
 # print(urls_list)
 
-# test = "https://lukashager.netlify.app/econ-481/05_web_scraping"
-# r_test = requests.get(test)
-# assert r_test.ok
-# testbs = BeautifulSoup(r_test.text, features = 'lxml')
-# search_criteria = ["sourceCode"]
-# test_soup = testbs.body.find_all("div", search_criteria) # does this get all of our code??? or is there more?
+test = "https://lukashager.netlify.app/econ-481/05_web_scraping"
+r_test = requests.get(test)
+assert r_test.ok
+
+testbs = BeautifulSoup(r_test.text, features = 'lxml')
+# field_names = [''] # is this even necessary?
+search_criteria = ["sourceCode cell-code"]
+test_soup = testbs.body.find_all("div", search_criteria) # does this get all of our code??? or is there more?
+
+# print(test_soup)
+
 tobe_string = ""
 for urls in urls_list:
     r_test = requests.get(urls)
     assert r_test.ok
     testbs = BeautifulSoup(r_test.text, features = 'lxml')
     search_criteria = ["sourceCode"]
-    test_soup = testbs.body.find_all("div", search_criteria) # does this get all of our code??? or is there more?
-    tobe_string.join(test_soup) # how do i add all the strings together?
+    # test_soup = testbs.body.find_all("div", search_criteria) # does this get all of our code??? or is there more?
+    # tobe_string.join(test_soup) # how do i add all the strings together?
     # rationale: get all into one string, then omit certain words until code shows through
     # convoluted method. there is def. a better way
+
+    # below is gpt code
+    test_soup = testbs.body.find_all('div', class_=search_criteria)
+    code_strings = [tag.get_text(strip = True) for tag in test_soup]
+    joined_string = "\n".join(code_strings)
+    tobe_string += joined_string    
     time.sleep(3)
 
-# print(tobe_string.head())
+print(tobe_string)
 
 
 
