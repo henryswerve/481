@@ -23,7 +23,7 @@ def scrape_code(url: str) -> str:
     """
     Scrapes code from 481 slides using beautiful soup.
     Obtains code from div elements and adds each line of code as 
-    new lines to be returned at the end of the function.
+    new lines after omitting for % to be returned at the end of the function.
     """
 
     # check for connection to url
@@ -33,16 +33,18 @@ def scrape_code(url: str) -> str:
     #initialize beautifulsoup
     bs = BeautifulSoup(r1.text, features = 'lxml')
 
-    # create search criteria 
-    search_criteria = ["sourceCode"]
-
     # find the code lines under div using the criteria
-    find_div = bs.body.find_all('div', search_criteria)
+    find_div = bs.body.find_all('code', attrs = {"class": "sourceCode python"})
 
     # obtain the code under tag elements
     code_tobe = [tag.get_text() for tag in find_div]
 
     # add each line of code on each new line
-    joined_string = "\n".join(code_tobe)   
+    joined_string = "\n".join(code_tobe)  
 
-    return joined_string
+    # omit % using regex
+    cleaned_string = re.sub(r'^\s*%.*$', '', joined_string, flags=re.MULTILINE)
+
+    time.sleep(3)
+
+    return cleaned_string
