@@ -46,3 +46,5 @@ def scrape_code(url: str) -> str:
     joined_string = "\n".join(code_tobe)   
 
     return joined_string
+
+print(scrape_code("https://lukashager.netlify.app/econ-481/01_intro_to_python#/title-slide"))
