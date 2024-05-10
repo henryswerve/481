@@ -48,3 +48,5 @@ def scrape_code(url: str) -> str:
     time.sleep(3)
 
     return cleaned_string
+
+print(scrape_code("https://lukashager.netlify.app/econ-481/01_intro_to_python#/title-slide"))
