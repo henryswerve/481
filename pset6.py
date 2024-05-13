@@ -21,7 +21,8 @@ def github() -> str:
 # exercise 1
 
 # set path to auctions.db
-path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
+# path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
+path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db"
 
 # # initialize the engine
 # engine = create_engine(f'sqlite:///{path}')
@@ -65,12 +66,31 @@ def std() -> str:
     sd = ''
     return None
 
-q = """
-SELECT COUNT(distinct itemId) as n_bids, itemID, STDEV(n_bids) as std
-FROM bids
-GROUP BY itemID
-"""
+# q = """
+# SELECT COUNT(itemID) as n_bids, itemID
+# FROM bids
+# GROUP BY itemID
+# HAVING n_bids > 2
+# ORDER BY n_bids desc, itemID
+# """
 
+
+# q = """
+# SELECT SQRT(SUM(SQUARE(count(itemID) as n_bids - mean(n_bids)) / count(itemID) - 1))  as std
+# , item ID
+# FROM bids
+# """
+
+q = """
+SELECT SQRT(SQUARE(n_bids - AVG(n_bids))) AS std, itemID
+FROM (
+    SELECT itemID, COUNT(itemID) AS n_bids
+    FROM bids
+    GROUP BY itemID
+    HAVING n_bids > 2
+    ORDER BY itemID desc
+) AS bids;
+"""
 print(auctions.query(q).head(10))
 
 # exercise 2
