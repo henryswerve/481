@@ -21,7 +21,7 @@ def github() -> str:
 # exercise 1
 
 # set path to auctions.db
-path = "/home/jovyan/econ-481-jupyterhub/auctions.db"
+path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
 
 # # initialize the engine
 # engine = create_engine(f'sqlite:///{path}')
@@ -53,7 +53,6 @@ auctions = DataBase(path)
 # itemId and std, the standard deviation of bids for that item. 
 # Include only bids for which the unbiased standard deviation 
 # can be calculated (that is, those with at least two bids). 
-# Calculate standard deviation as
 
 
 def std() -> str:
@@ -67,8 +66,40 @@ def std() -> str:
     return None
 
 q = """
-SELECT COUNT(distinct itemId) as n_bids, itemID
+SELECT COUNT(distinct itemId) as n_bids, itemID, STDEV(n_bids) as std
 FROM bids
+GROUP BY itemID
 """
 
 print(auctions.query(q).head(10))
+
+# exercise 2
+# Please write a function called bidder_spend_frac that takes no arguments and 
+# returns a string containing a SQL query that can be run against the auctions.db 
+# database that outputs a table that has four columns:
+# bidderName: the name of the bidder
+# total_spend: the amount the bidder spent (that is, the sum of their winning bids)
+# total_bids: the amount the bidder bid, regardless of the outcome. 
+# NB: bidders may submit multiple bids for an item – if this is the case only count their 
+# highest bid for an item for this calculation.
+# spend_frac: total_spend/total_bids
+
+# need total_bids
+
+# winning bids meaning only the ones they win? or all bids?
+
+q = """
+SELECT biddername, total(bidAmount) as total_spend, max(bidAmount) as total_bids
+FROM bids
+WHERE bidAmount is not null
+GROUP BY biddername
+"""
+
+# print(auctions.query(q).head(10))
+
+def bidder_spend_frac() -> str:
+    """
+    Some docstrings.
+    """
+
+    return None
