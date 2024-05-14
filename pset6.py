@@ -66,12 +66,14 @@ def std() -> str:
     return None
 
 q = """
-SELECT COUNT(distinct itemId) as n_bids, itemID, STDEV(n_bids) as std
+SELECT COUNT(*) as n_bids
+, itemID
 FROM bids
 GROUP BY itemID
+ORDER by n_bids asc
 """
 
-print(auctions.query(q).head(10))
+# print(auctions.query(q).head(10))
 
 # exercise 2
 # Please write a function called bidder_spend_frac that takes no arguments and 
@@ -84,18 +86,24 @@ print(auctions.query(q).head(10))
 # highest bid for an item for this calculation.
 # spend_frac: total_spend/total_bids
 
-# need total_bids
+# need total_bids?
+# need spend_frac
 
 # winning bids meaning only the ones they win? or all bids?
+# , (total_spend / total_bids) as spend_frac???
+
 
 q = """
-SELECT biddername, total(bidAmount) as total_spend, max(bidAmount) as total_bids
+SELECT biddername
+, sum(bidAmount) as total_spend
+, max(bidAmount) as total_bids
+, (total_spend / total_bids) as spend_frac
 FROM bids
 WHERE bidAmount is not null
 GROUP BY biddername
 """
 
-# print(auctions.query(q).head(10))
+# print(auctions.query(q).head())
 
 def bidder_spend_frac() -> str:
     """
