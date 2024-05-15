@@ -11,6 +11,10 @@ from sqlalchemy.orm import Session
 
 # exercise 0
 
+# reexplain renaming columns
+# join by left, right, inner??
+# questions from each exercise specifically
+
 def github() -> str:
     """
     Some docstrings.
@@ -21,8 +25,8 @@ def github() -> str:
 # exercise 1
 
 # set path to auctions.db
-# path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
-path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db"
+path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
+# path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db"
 
 # create the query class
 class DataBase:
@@ -48,7 +52,7 @@ auctions = DataBase(path)
 # Include only bids for which the unbiased standard deviation 
 # can be calculated (that is, those with at least two bids). 
 
-
+pls
 def std() -> str:
     """
     Some docstrings.
@@ -63,35 +67,34 @@ def std() -> str:
 # misuse of avg function
 # not summing across all items...
 
+q = """
+SELECT SQRT(SUM(POWER(n_bids - AVG(n_bids), 2)) / (COUNT(n_bids) - 1)) AS std, itemID
+FROM (
+    SELECT itemID
+    , COUNT(itemID) AS n_bids
+    FROM bids
+    GROUP BY itemID
+    HAVING n_bids > 2
+    ORDER BY itemID desc
+) AS bids;
+GROUP BY itemID
+"""
+
 # q = """
-# SELECT SQRT((SUM(n_bids - AVG(n_bids) * (n_bids - AVG(n_bids)))) / (COUNT(n_bids) - 1)) AS std
-# , itemID
+# SELECT SQRT(SUM(POWER(n_bids - AVG(n_bids), 2)) / (COUNT(n_bids) - 1)) AS std, itemID
 # FROM (
 #     SELECT itemID
 #     , COUNT(itemID) AS n_bids
 #     FROM bids
 #     GROUP BY itemID
 #     HAVING n_bids > 2
-#     ORDER BY itemID desc
 # ) AS bids;
 # GROUP BY itemID
 # """
 
-# nede to add still
-# WHERE COUNT(distinct bidAmount) > 2
-# need to show all output, not just one itemid
 
-q = """
-SELECT SQRT(SUM(POWER(bidAmount - avg_bid, 2)) / (COUNT(bidAmount) - 1)) AS std
-, itemID
-FROM (
-    SELECT itemID, bidAmount
-    , AVG(bidAmount) OVER (PARTITION by itemID) AS avg_bid
-    FROM bids
-) AS bids
-"""
 
-# print(auctions.query(q))
+print(auctions.query(q))
 
 # exercise 2
 # Please write a function called bidder_spend_frac that takes no arguments and 
@@ -123,32 +126,18 @@ FROM (
 
 # if winning_bid exists, total_spend is winning_bid, else it's only bidAmount
 # issue with subquery.... want then it is the bidamount, and is in palce as winning_bid
-
-# q = """
-# SELECT biddername
-# , CASE WHEN bidAmount > 0 THEN winning_bid ELSE bidAmount END as total_spend
-# , max(bidAmount) as total_bids
-# , (sum(winning_bid) / max(bidAmount)) as spend_frac
-# FROM (SELECT CASE WHEN itemPrice = bidAmount THEN bidAmount END AS winning_bid
-#     , bidAmount
-#     , bidderName
-#     FROM bids
-# )
-# GROUP BY biddername
-# """
-
-# still need to do other parts of problem
 q = """
-SELECT bidderName, itemID, bidAmount, total_bids
-FROM (
-    SELECT bidderName, itemID, bidAmount, isBuyerHighBidder
-    , SUM(bidAmount * isBuyerHighBidder) OVER (PARTITION by itemID) AS total_bids
+SELECT biddername
+, CASE WHEN bidAmount > 0 THEN winning_bid ELSE bidAmount END as total_spend
+, max(bidAmount) as total_bids
+, (sum(winning_bid) / max(bidAmount)) as spend_frac
+FROM (SELECT CASE WHEN itemPrice = bidAmount THEN bidAmount END AS winning_bid
+    , bidAmount
+    , bidderName
     FROM bids
-) AS bids
+)
+GROUP BY biddername
 """
-
-print(auctions.query(q))
-# sum of bid * win over sum of bid
 
 # Columns: [index, bidLogId, itemId, itemPrice, bidAmount, bidTime, quantity, 
 # bidIPAddress, adCode, serverIP, retracted, bidderName, highBidderName, 
@@ -166,6 +155,7 @@ print(auctions.query(q))
 # GROUP BY biddername
 # """
 
+# print(auctions.query(q))
 
 def bidder_spend_frac() -> str:
     """
@@ -189,6 +179,15 @@ def bidder_spend_frac() -> str:
 # WHERE 1 = 2
 # """
 
+# shrug
+# q = """
+# SELECT (b.bidAmount == b.itemPrice) AS freq
+# FROM bids as b
+# LEFT JOIN items as i
+# WHERE isBuyNowUsed != 1
+# ORDER BY i.itemID desc
+# """
+
 # q = """
 # SELECT COUNT((b.bidAmount = b.itemPrice)) / COUNT(b.itemID) AS freq
 # , i.itemID
@@ -197,7 +196,6 @@ def bidder_spend_frac() -> str:
 # WHERE i.isBuyNowUsed != 1
 # GROUP BY i.itemID
 # """
-
 # FROM (
 #     SELECT (COUNT(CASE WHEN BidAmount = itemPrice THEN 1 END) / COUNT(itemID)) AS freq
 #     FROM bids
@@ -211,12 +209,12 @@ def bidder_spend_frac() -> str:
 # HAVING i.isBuyNowUsed != 1
 # """
 
-q = """
-SELECT b.bidAmount, b.itemPrice, i.itemID, i.bidIncrement
-FROM bids as b
-LEFT JOIN items as i ON b.itemID = i.itemID
-WHERE i.isBuyNowUsed != 1
-"""
+# q = """
+# SELECT b.bidAmount, b.itemPrice, i.itemID, i.bidIncrement
+# FROM bids as b
+# LEFT JOIN items as i ON b.itemID = i.itemID
+# WHERE i.isBuyNowUsed != 1
+# """
 
 # print(auctions.query(q))
 
@@ -226,6 +224,9 @@ def min_increment_freq() -> str:
     """
 
     return None
+
+
+
 
 # exercise 4
 # Please write a function called win_perc_by_timestamp that takes no arguments 
