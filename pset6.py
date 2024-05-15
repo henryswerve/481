@@ -11,10 +11,6 @@ from sqlalchemy.orm import Session
 
 # exercise 0
 
-# reexplain renaming columns
-# join by left, right, inner??
-# questions from each exercise specifically
-
 def github() -> str:
     """
     Some docstrings.
@@ -25,8 +21,8 @@ def github() -> str:
 # exercise 1
 
 # set path to auctions.db
-path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
-# path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db"
+# path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
+path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db"
 
 # # initialize the engine
 # engine = create_engine(f'sqlite:///{path}')
@@ -87,7 +83,10 @@ FROM (
 ) AS bids;
 """
 
-# print(auctions.query(q).head(10))
+q = """
+SELECT SQRT()
+"""
+print(auctions.query(q).head(10))
 
 # exercise 2
 # Please write a function called bidder_spend_frac that takes no arguments and 
@@ -109,11 +108,17 @@ SELECT biddername
 , sum(bidAmount) as total_spend
 , max(bidAmount) as total_bids
 , (sum(bidAmount) / max(bidAmount)) as spend_frac
+CASE WHEN isBuyerHighBidder = 1 then highBidderName == bidderName else 0 end as total_bids
 FROM bids
 WHERE bidAmount is not null
 GROUP BY biddername
 """
 
+# q = """
+# SELECT *
+# FROM bids
+# WHERE 1 = 2
+# """
 # print(auctions.query(q).head())
 
 def bidder_spend_frac() -> str:
@@ -138,7 +143,6 @@ def bidder_spend_frac() -> str:
 # WHERE 1 = 2
 # """
 
-# shrug
 # q = """
 # SELECT (b.bidAmount == b.itemPrice) AS freq
 # FROM bids as b
@@ -162,9 +166,6 @@ def min_increment_freq() -> str:
     """
 
     return None
-
-
-
 
 # exercise 4
 # Please write a function called win_perc_by_timestamp that takes no arguments 
@@ -216,7 +217,7 @@ on b.itemid=a.itemid;
 
 
 
-print(auctions.query(q).head())
+# print(auctions.query(q).head())
 
 def win_perc_by_timestamp() -> str:
     """
