@@ -28,13 +28,6 @@ def github() -> str:
 path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
 # path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db"
 
-# # initialize the engine
-# engine = create_engine(f'sqlite:///{path}')
-
-# inspect the table for names
-# inspector = inspect(engine)
-# inspector.get_table_names()
-
 # create the query class
 class DataBase:
     def __init__(self, loc: str, db_type: str = "sqlite") -> None:
@@ -74,20 +67,35 @@ def std() -> str:
 # misuse of avg function
 # not summing across all items...
 
+# q = """
+# SELECT SQRT((SUM(n_bids - AVG(n_bids) * (n_bids - AVG(n_bids)))) / (COUNT(n_bids) - 1)) AS std
+# , itemID
+# FROM (
+#     SELECT itemID
+#     , COUNT(itemID) AS n_bids
+#     FROM bids
+#     GROUP BY itemID
+#     HAVING n_bids > 2
+#     ORDER BY itemID desc
+# ) AS bids;
+# GROUP BY itemID
+# """
+
 q = """
-SELECT SQRT((n_bids - AVG(n_bids) * (n_bids - AVG(n_bids))) / (COUNT(n_bids) - 1)) AS std
-, itemID
+SELECT SQRT(SUM(POWER(n_bids - AVG(n_bids), 2)) / (COUNT(n_bids) - 1)) AS std, itemID
 FROM (
     SELECT itemID
     , COUNT(itemID) AS n_bids
     FROM bids
     GROUP BY itemID
     HAVING n_bids > 2
-    ORDER BY itemID desc
 ) AS bids;
+GROUP BY itemID
 """
 
-# print(auctions.query(q).head(10))
+
+
+print(auctions.query(q))
 
 # exercise 2
 # Please write a function called bidder_spend_frac that takes no arguments and 
@@ -104,17 +112,51 @@ FROM (
 # how to count only their highest bid for an item?
 # , (total_spend / total_bids) as spend_frac???
 
+# q = """
+# SELECT bidderName
+# , SUM(itemPrice) AS total_spend
+# , SUM(bidAmount) AS total_bids
+# , (SUM(itemPrice) / SUM(max_bidAmount)) AS spend_frac
+# FROM (
+#     SELECT bidderName, bidAmount, itemprice, MAX(bidAmount) AS max_bidAmount
+#     FROM bids
+#     GROUP BY bidderName, itemPrice
+# )
+# GROUP BY biddername
+# """
+
+# if winning_bid exists, total_spend is winning_bid, else it's only bidAmount
+# issue with subquery.... want then it is the bidamount, and is in palce as winning_bid
 q = """
 SELECT biddername
-, sum(bidAmount) as total_spend
+, CASE WHEN bidAmount > 0 THEN winning_bid ELSE bidAmount END as total_spend
 , max(bidAmount) as total_bids
-, (sum(bidAmount) / max(bidAmount)) as spend_frac
-FROM bids
-WHERE bidAmount is not null
+, (sum(winning_bid) / max(bidAmount)) as spend_frac
+FROM (SELECT CASE WHEN itemPrice = bidAmount THEN bidAmount END AS winning_bid
+    , bidAmount
+    , bidderName
+    FROM bids
+)
 GROUP BY biddername
 """
 
-# print(auctions.query(q).head())
+# Columns: [index, bidLogId, itemId, itemPrice, bidAmount, bidTime, quantity, 
+# bidIPAddress, adCode, serverIP, retracted, bidderName, highBidderName, 
+# isBuyerHighBidder, isLoggedInBuyer]
+
+# q = """
+# SELECT bidderName
+# , SUM(itemPrice) AS total_spend
+# , SUM(bidAmount) AS total_bids
+# , (SUM(itemPrice) / SUM(max_bidAmount)) AS spend_frac
+# FROM (
+#     SELECT bidderName, MAX(bidAmount) AS max_bidAmount, bidAmount, itemPrice
+#     FROM bids
+# )
+# GROUP BY biddername
+# """
+
+# print(auctions.query(q))
 
 def bidder_spend_frac() -> str:
     """
@@ -147,14 +189,35 @@ def bidder_spend_frac() -> str:
 # ORDER BY i.itemID desc
 # """
 
-q = """
-SELECT COUNT((b.bidAmount == b.itemPrice)) / COUNT(b.itemID) AS freq
-, b.itemID
-FROM bids as b
-LEFT JOIN items as i
-WHERE i.isBuyNowUsed != 1
-"""
-# print(auctions.query(q).head())
+# q = """
+# SELECT COUNT((b.bidAmount = b.itemPrice)) / COUNT(b.itemID) AS freq
+# , i.itemID
+# FROM bids as b
+
+# WHERE i.isBuyNowUsed != 1
+# GROUP BY i.itemID
+# """
+# FROM (
+#     SELECT (COUNT(CASE WHEN BidAmount = itemPrice THEN 1 END) / COUNT(itemID)) AS freq
+#     FROM bids
+# ) as b
+
+
+# q = """
+# SELECT SUM((CASE WHEN b.bidAmount = b.itemPrice THEN 1 END)) / COUNT(i.itemID) AS freq
+# FROM bids as b
+# LEFT JOIN items as i ON b.itemID = i.itemID
+# HAVING i.isBuyNowUsed != 1
+# """
+
+# q = """
+# SELECT b.bidAmount, b.itemPrice, i.itemID, i.bidIncrement
+# FROM bids as b
+# LEFT JOIN items as i ON b.itemID = i.itemID
+# WHERE i.isBuyNowUsed != 1
+# """
+
+# print(auctions.query(q))
 
 def min_increment_freq() -> str:
     """
@@ -199,24 +262,24 @@ def min_increment_freq() -> str:
 
 # idk man
 
-q = """
-select b.itemid, b.bidtime, a.starttime, a.endtime,
-(julianday(a.endtime)-julianday(b.bidtime)) / a.length as time_norm,
-case when (julianday(a.endtime) - julianday(a.starttime)) < 1 AND (julianday(a.endtime) - julianday(a.starttime)) >= 0 then 1 
-when (julianday(a.endtime) - julianday(a.starttime)) < 2 AND (julianday(a.endtime) - julianday(a.starttime)) >= 1 then 2
-when (julianday(a.endtime) - julianday(a.starttime)) < 3 AND (julianday(a.endtime) - julianday(a.starttime)) >= 2 then 3 else 0 end as timestamp_bin
-from bids as b
-inner join (
-    select itemid, starttime, endtime, 
-    julianday(endtime) - julianday(starttime) as length
-    from items
-) as a
-on b.itemid=a.itemid;
-"""
+# q = """
+# select b.itemid, b.bidtime, a.starttime, a.endtime,
+# (julianday(a.endtime)-julianday(b.bidtime)) / a.length as time_norm,
+# case when (julianday(a.endtime) - julianday(a.starttime)) < 1 AND (julianday(a.endtime) - julianday(a.starttime)) >= 0 then 1 
+# when (julianday(a.endtime) - julianday(a.starttime)) < 2 AND (julianday(a.endtime) - julianday(a.starttime)) >= 1 then 2
+# when (julianday(a.endtime) - julianday(a.starttime)) < 3 AND (julianday(a.endtime) - julianday(a.starttime)) >= 2 then 3 else 0 end as timestamp_bin
+# from bids as b
+# inner join (
+#     select itemid, starttime, endtime, 
+#     julianday(endtime) - julianday(starttime) as length
+#     from items
+# ) as a
+# on b.itemid=a.itemid;
+# """
 
 
 
-print(auctions.query(q).head())
+# print(auctions.query(q).head())
 
 def win_perc_by_timestamp() -> str:
     """
