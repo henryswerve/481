@@ -6,14 +6,9 @@ import pandas as pd
 import numpy as np
 import sqlalchemy
 from sqlalchemy import create_engine
-from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
 # exercise 0
-
-# reexplain renaming columns
-# join by left, right, inner??
-# questions from each exercise specifically
 
 def github() -> str:
     """
@@ -25,8 +20,8 @@ def github() -> str:
 # exercise 1
 
 # set path to auctions.db
-path = "C:\\Users\\danny\\Desktop\\481\\auctions.db"
-# path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db"
+path = "C:\\Users\\danny\\Desktop\\481\\auctions.db" # pc
+# path = "C:\\Users\\henryswerve\\Desktop\\481\\auctions.db" #laptop
 
 # create the query class
 class DataBase:
@@ -45,244 +40,116 @@ class DataBase:
 auctions = DataBase(path)
 
 # exercise 1
-# Please write a function called std that takes no arguments and returns
-# a string containing a SQL query that can be run against the 
-# auctions.db database that outputs a table that has two columns: 
-# itemId and std, the standard deviation of bids for that item. 
-# Include only bids for which the unbiased standard deviation 
-# can be calculated (that is, those with at least two bids). 
 
-pls
 def std() -> str:
     """
-    Some docstrings.
+    Returns standard deviation of bidAmount
     """
-    q = 'select itemId, quantity from bids'
-    
-    print(auctions.query(q).head())
-    sd = ''
-    return None
-
-# we want all std for all itemids?
-# misuse of avg function
-# not summing across all items...
-
-q = """
-SELECT SQRT(SUM(POWER(n_bids - AVG(n_bids), 2)) / (COUNT(n_bids) - 1)) AS std, itemID
-FROM (
+    q = """
     SELECT itemID
-    , COUNT(itemID) AS n_bids
-    FROM bids
+    , SQRT(SUM(POWER(bidAmount - avg_bid, 2)) / (COUNT(bidAmount) - 1)) AS std
+    FROM (
+        SELECT itemID, bidAmount
+        , AVG(bidAmount) OVER (PARTITION by itemID) AS avg_bid
+        FROM bids
+        WHERE itemID IN (
+            SELECT itemID
+            FROM bids
+            GROUP BY itemID
+            HAVING COUNT(*) >= 2
+        ) AND bidAmount IS NOT NULL 
+    ) AS bids
     GROUP BY itemID
-    HAVING n_bids > 2
-    ORDER BY itemID desc
-) AS bids;
-GROUP BY itemID
-"""
-
-# q = """
-# SELECT SQRT(SUM(POWER(n_bids - AVG(n_bids), 2)) / (COUNT(n_bids) - 1)) AS std, itemID
-# FROM (
-#     SELECT itemID
-#     , COUNT(itemID) AS n_bids
-#     FROM bids
-#     GROUP BY itemID
-#     HAVING n_bids > 2
-# ) AS bids;
-# GROUP BY itemID
-# """
-
-
-
-print(auctions.query(q))
+    """
+        
+    return q
 
 # exercise 2
-# Please write a function called bidder_spend_frac that takes no arguments and 
-# returns a string containing a SQL query that can be run against the auctions.db 
-# database that outputs a table that has four columns:
-# bidderName: the name of the bidder
-# total_spend: the amount the bidder spent (that is, the sum of their winning bids)
-# total_bids: the amount the bidder bid, regardless of the outcome. 
-# NB: bidders may submit multiple bids for an item – if this is the case only count their 
-# highest bid for an item for this calculation.
-# spend_frac: total_spend/total_bids
-
-# winning bids meaning only the ones they win? or all bids?
-# how to count only their highest bid for an item?
-# , (total_spend / total_bids) as spend_frac???
-
-# q = """
-# SELECT bidderName
-# , SUM(itemPrice) AS total_spend
-# , SUM(bidAmount) AS total_bids
-# , (SUM(itemPrice) / SUM(max_bidAmount)) AS spend_frac
-# FROM (
-#     SELECT bidderName, bidAmount, itemprice, MAX(bidAmount) AS max_bidAmount
-#     FROM bids
-#     GROUP BY bidderName, itemPrice
-# )
-# GROUP BY biddername
-# """
-
-# if winning_bid exists, total_spend is winning_bid, else it's only bidAmount
-# issue with subquery.... want then it is the bidamount, and is in palce as winning_bid
-q = """
-SELECT biddername
-, CASE WHEN bidAmount > 0 THEN winning_bid ELSE bidAmount END as total_spend
-, max(bidAmount) as total_bids
-, (sum(winning_bid) / max(bidAmount)) as spend_frac
-FROM (SELECT CASE WHEN itemPrice = bidAmount THEN bidAmount END AS winning_bid
-    , bidAmount
-    , bidderName
-    FROM bids
-)
-GROUP BY biddername
-"""
-
-# Columns: [index, bidLogId, itemId, itemPrice, bidAmount, bidTime, quantity, 
-# bidIPAddress, adCode, serverIP, retracted, bidderName, highBidderName, 
-# isBuyerHighBidder, isLoggedInBuyer]
-
-# q = """
-# SELECT bidderName
-# , SUM(itemPrice) AS total_spend
-# , SUM(bidAmount) AS total_bids
-# , (SUM(itemPrice) / SUM(max_bidAmount)) AS spend_frac
-# FROM (
-#     SELECT bidderName, MAX(bidAmount) AS max_bidAmount, bidAmount, itemPrice
-#     FROM bids
-# )
-# GROUP BY biddername
-# """
-
-# print(auctions.query(q))
 
 def bidder_spend_frac() -> str:
     """
-    Some docstrings.
+    Returns sql query for bidderName, total_spend,
+    total_bids, and spend_frac
     """
-
-    return None
+    q = """
+    SELECT bidderName
+    , SUM(CASE WHEN highBidderName = bidderName THEN bidamount ELSE 0 END) AS total_spend
+    , SUM(bidAmount) AS total_bids
+    , SUM(CASE WHEN highBidderName = bidderName THEN bidamount ELSE 0 END) * 1.0 / SUM(bidAmount) * 1.0 AS spend_frac
+    FROM (
+        SELECT highBidderName
+        , bidderName
+        , itemPrice
+        , itemID
+        , bidAmount
+        FROM bids AS b1
+        WHERE bidAmount = (
+            SELECT MAX(b2.bidAmount)
+            FROm bids AS b2
+            WHERE b1.itemID = b2.itemID
+            AND b1.bidderName =  b2.bidderName
+        )
+    ) AS bids
+    GROUP BY bidderName
+    """
+    return q
 
 # exercise 3
 
-# Please write a function called min_increment_freq that takes no arguments and 
-# returns a string containing a SQL query that can be run against the auctions.db 
-# database that outputs a table that has one column (freq) which represents the 
-# fraction of bids in the database that are exactly the minimum bid increment 
-# (items.bidIncrement) above the previous high bid. For this exercise, 
-# exclude items where isBuyNowUsed = 1.
-
-# q = """
-# SELECT *
-# FROM items
-# WHERE 1 = 2
-# """
-
-# shrug
-# q = """
-# SELECT (b.bidAmount == b.itemPrice) AS freq
-# FROM bids as b
-# LEFT JOIN items as i
-# WHERE isBuyNowUsed != 1
-# ORDER BY i.itemID desc
-# """
-
-# q = """
-# SELECT COUNT((b.bidAmount = b.itemPrice)) / COUNT(b.itemID) AS freq
-# , i.itemID
-# FROM bids as b
-
-# WHERE i.isBuyNowUsed != 1
-# GROUP BY i.itemID
-# """
-# FROM (
-#     SELECT (COUNT(CASE WHEN BidAmount = itemPrice THEN 1 END) / COUNT(itemID)) AS freq
-#     FROM bids
-# ) as b
-
-
-# q = """
-# SELECT SUM((CASE WHEN b.bidAmount = b.itemPrice THEN 1 END)) / COUNT(i.itemID) AS freq
-# FROM bids as b
-# LEFT JOIN items as i ON b.itemID = i.itemID
-# HAVING i.isBuyNowUsed != 1
-# """
-
-# q = """
-# SELECT b.bidAmount, b.itemPrice, i.itemID, i.bidIncrement
-# FROM bids as b
-# LEFT JOIN items as i ON b.itemID = i.itemID
-# WHERE i.isBuyNowUsed != 1
-# """
-
-# print(auctions.query(q))
-
 def min_increment_freq() -> str:
     """
-    Some docstrings.
+    Returns sql query for the fraction of bids in the database that are
+    exactly the minimum bid increment
+    """
+    q = """
+    SELECT SUM(CASE WHEN b2.bidAmount = b.bidAmount + i.bidIncrement THEN 1 ELSE 0 END) * 1.0 / COUNT(b2.bidAmount) AS freq
+    FROM bids AS b
+    JOIN bids AS b2 ON b.itemID = b2.itemID AND b.bidAmount < b2.bidAmount
+    JOIN items AS i on i.itemID = b.itemID
+    WHERE i.isBuyNowUsed != 1
+    GROUP BY b.itemID
     """
 
-    return None
-
-
-
+    return q
 
 # exercise 4
-# Please write a function called win_perc_by_timestamp that takes no arguments 
-# and returns a string containing a SQL query that can be run against the auctions.db database that outputs a table that has two columns:
-
-# timestamp_bin: Using the same methodology as in the slides to normalize the 
-# percentage of time remaining in the auction when a bid is placed, 
-# normalize the bid timestamp and classify it as one of ten bins: 
-# 1 corresponds to 0-.1, 2 corresponds to .1-.2, etc.
-# win_perc: the frequency with which a bid placed with this timestamp
-#  bin won the auction.
-
-
-# how to create new column for timestamp_bin? has to be better way to iterate this over all the end and start times
-
-
-# q = """
-# select b.itemid, b.bidtime, a.starttime, a.endtime,
-# (julianday(endtime)-julianday(bidtime)) / a.length as time_norm,
-# timestamp_bin
-# from bids as b
-# inner join (
-#     select itemid, starttime, endtime, 
-#     julianday(endtime) - julianday(starttime) as length,
-#     case when (julianday(endtime) - julianday(starttime)) <= 1 then 1
-#     when (julianday(endtime) - julianday(starttime)) <= 2 and (julianday(endtime) - julianday(starttime)) > 1 then 2
-#     else 0 end as timestamp_bin
-#     from items
-# ) as a
-# on b.itemid=a.itemid
-# """
-
-# idk man
-
-# q = """
-# select b.itemid, b.bidtime, a.starttime, a.endtime,
-# (julianday(a.endtime)-julianday(b.bidtime)) / a.length as time_norm,
-# case when (julianday(a.endtime) - julianday(a.starttime)) < 1 AND (julianday(a.endtime) - julianday(a.starttime)) >= 0 then 1 
-# when (julianday(a.endtime) - julianday(a.starttime)) < 2 AND (julianday(a.endtime) - julianday(a.starttime)) >= 1 then 2
-# when (julianday(a.endtime) - julianday(a.starttime)) < 3 AND (julianday(a.endtime) - julianday(a.starttime)) >= 2 then 3 else 0 end as timestamp_bin
-# from bids as b
-# inner join (
-#     select itemid, starttime, endtime, 
-#     julianday(endtime) - julianday(starttime) as length
-#     from items
-# ) as a
-# on b.itemid=a.itemid;
-# """
-
-
-
-# print(auctions.query(q).head())
 
 def win_perc_by_timestamp() -> str:
     """
-    Some docstrings.
+    Returns  a sql query for timestamp_bin. Win_perc was omitted
+    """
+    q = """
+
+    SELECT
+    CASE 
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.1 THEN 1
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.2 THEN 2
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.3 THEN 3
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.4 THEN 4
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.5 THEN 5 
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.6 THEN 6
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.7 THEN 7 
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.8 THEN 8
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 0.9 THEN 9
+        WHEN (julianday(b.bidTime) - julianday(a.auctionStart)) /
+            (julianday(a.auctionEnd) - julianday(a.auctionStart)) <= 1.0 THEN 10 
+    END AS timestamp_bin 
+    from bids as b
+    inner join (
+        select itemid, starttime AS auctionStart, endtime AS auctionEnd, 
+        julianday(endtime) - julianday(starttime) as length
+        from items
+    ) as a
+    on b.itemid=a.itemid
     """
 
-    return None
+    return q
