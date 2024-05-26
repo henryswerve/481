@@ -1,0 +1,14 @@
+import pandas as pd
+import numpy as np
+import csv
+
+path = "C:\\Users\\danny\\Desktop\\481\\481\\cpi.csv"
+csv = pd.read_csv(path, encoding = "cp1252", skiprows = 2)
+print(csv)
+csv2 = csv[1:]
+print(csv2)
+
+df = pd.DataFrame(csv)
+print(df)
+
+df.to_csv("cpi.csv")
